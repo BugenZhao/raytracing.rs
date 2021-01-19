@@ -13,16 +13,31 @@ impl Camera {
     pub const WIDE: f64 = 16. / 9.;
     pub const CINEMA: f64 = 2.35;
 
-    pub fn new(aspect_ratio: f64, vertical_fov: f64, focal_length: f64, origin: Coord) -> Self {
+    pub const WORLD_UP: Coord = Coord {
+        x: 0.,
+        y: 1.,
+        z: 0.,
+    };
+
+    pub fn new(
+        aspect_ratio: f64,
+        vertical_fov: f64,
+        origin: Coord,
+        look_at: Coord,
+        vup: Coord,
+    ) -> Self {
         let theta = vertical_fov.to_radians();
         let h = (theta / 2.).tan();
-
         let vp_height = h * 2.;
         let vp_width = vp_height * aspect_ratio;
-        let horizontal = Coord::new(vp_width, 0., 0.);
-        let vertical = Coord::new(0., vp_height, 0.);
-        let corner: Coord =
-            origin - horizontal / 2. - vertical / 2. - Coord::new(0., 0., focal_length);
+
+        let w = (origin - look_at).unit();
+        let u = vup.cross(w).unit();
+        let v = w.cross(u);
+
+        let horizontal = u * vp_width;
+        let vertical = v * vp_height;
+        let corner: Coord = origin - horizontal / 2. - vertical / 2. - w;
 
         Self {
             aspect_ratio,
@@ -41,6 +56,24 @@ impl Camera {
 
 impl Default for Camera {
     fn default() -> Self {
-        Self::new(Self::WIDE, 90., 1., Coord::zeros())
+        Self::new(
+            Self::WIDE,
+            90.,
+            Coord::new(0., 0., 0.),
+            Coord::new(0., 0., -1.),
+            Camera::WORLD_UP,
+        )
+    }
+}
+
+impl Camera {
+    pub fn new_distant() -> Self {
+        Self::new(
+            Self::WIDE,
+            90.,
+            Coord::new(-1.5, 1.5, 1.5),
+            Coord::new(0., 0., 0.),
+            Camera::WORLD_UP,
+        )
     }
 }

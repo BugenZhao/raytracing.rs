@@ -27,6 +27,6 @@ pub fn simple_scene() -> Scene {
             Box::new(right_sphere),
             Box::new(ground),
         ]),
-        camera: Camera::default(),
+        camera: Camera::new_distant(),
     }
 }
