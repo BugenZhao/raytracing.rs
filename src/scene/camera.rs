@@ -11,8 +11,13 @@ pub struct Camera {
 
 impl Camera {
     pub const WIDE: f64 = 16. / 9.;
+    pub const CINEMA: f64 = 2.35;
 
-    pub fn new(aspect_ratio: f64, vp_height: f64, focal_length: f64, origin: Coord) -> Self {
+    pub fn new(aspect_ratio: f64, vertical_fov: f64, focal_length: f64, origin: Coord) -> Self {
+        let theta = vertical_fov.to_radians();
+        let h = (theta / 2.).tan();
+
+        let vp_height = h * 2.;
         let vp_width = vp_height * aspect_ratio;
         let horizontal = Coord::new(vp_width, 0., 0.);
         let vertical = Coord::new(0., vp_height, 0.);
@@ -36,6 +41,6 @@ impl Camera {
 
 impl Default for Camera {
     fn default() -> Self {
-        Self::new(Self::WIDE, 2., 1., Coord::zeros())
+        Self::new(Self::WIDE, 90., 1., Coord::zeros())
     }
 }
