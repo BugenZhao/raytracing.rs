@@ -224,11 +224,6 @@ impl Vec3<f64> {
             rng.gen_range(min..=max),
         )
     }
-
-    pub fn random_in_unit_sphere() -> Self {
-        let u = rand::random::<f64>().powf(1. / 3.);
-        Self::random(-1., 1.).unit() * u
-    }
 }
 
 #[cfg(test)]
@@ -364,10 +359,5 @@ mod tests {
         ];
         let sum: Vec3<_> = arr.into_iter().sum();
         assert_eq!(sum, Vec3::new(12., 15., 18.));
-    }
-
-    #[test]
-    fn test_random() {
-        assert!((0..10000).all(|_| Vec3::<f64>::random_in_unit_sphere().length() <= 1.));
     }
 }
