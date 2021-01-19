@@ -5,6 +5,7 @@ use rayon::prelude::*;
 use crate::{output::output_png, scene, vec3::RelColor};
 
 const MAX_DEPTH: usize = 50;
+const WIDTH: u32 = 800;
 // antialiasing
 const SAMPLES_PER_AXIS: u32 = 10;
 const SAMPLES_PER_PIXEL: u32 = SAMPLES_PER_AXIS * SAMPLES_PER_AXIS;
@@ -14,7 +15,7 @@ pub fn render() -> Result<()> {
     let scene = scene::examples::simple_scene();
     let aspect_ratio = scene.camera.aspect_ratio;
 
-    let width: u32 = 800;
+    let width: u32 = WIDTH;
     let height: u32 = (width as f64 / aspect_ratio) as u32;
 
     let data: Vec<u8> = iproduct!((0..height).rev(), (0..width))
