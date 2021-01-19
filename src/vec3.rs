@@ -11,15 +11,26 @@ pub struct Vec3<T> {
 }
 
 pub type Coord = Vec3<f64>;
-pub type Color = Vec3<f64>;
+pub type RelColor = Vec3<f64>;
+pub type Color = Vec<u8>;
 
-impl<T: Float> Vec3<T> {
+impl<T> Vec3<T> {
     pub fn new(x: T, y: T, z: T) -> Self {
         Self { x, y, z }
     }
 
+    pub fn into_vec(self) -> Vec<T> {
+        vec![self.x, self.y, self.z]
+    }
+}
+
+impl<T: Float> Vec3<T> {
     pub fn ones() -> Self {
         Self::new(T::one(), T::one(), T::one())
+    }
+
+    pub fn zeros() -> Self {
+        Self::new(T::zero(), T::zero(), T::zero())
     }
 
     pub fn squared_length(&self) -> T {
@@ -31,9 +42,14 @@ impl<T: Float> Vec3<T> {
     }
 }
 
-impl<T> Vec3<T> {
-    pub fn into_arrayvec(self) -> ArrayVec<[T; 3]> {
-        ArrayVec::from([self.x, self.y, self.z])
+impl RelColor {
+    pub fn into_8bit_color(self) -> Color {
+        let max = 255.999;
+        vec![
+            (self.x * max) as u8,
+            (self.y * max) as u8,
+            (self.z * max) as u8,
+        ]
     }
 }
 
