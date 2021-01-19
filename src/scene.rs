@@ -1,7 +1,8 @@
-use crate::{hit::HittableList, sphere::Sphere, vec3::Coord};
+use crate::{camera::Camera, hit::HittableList, sphere::Sphere, vec3::Coord};
 
 pub struct Scene {
     pub world: HittableList,
+    pub camera: Camera,
 }
 
 pub fn simple_scene() -> Scene {
@@ -10,5 +11,6 @@ pub fn simple_scene() -> Scene {
 
     Scene {
         world: HittableList::new(vec![Box::new(sphere), Box::new(ground)]),
+        camera: Camera::default(),
     }
 }

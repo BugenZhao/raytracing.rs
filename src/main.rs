@@ -2,6 +2,7 @@
 
 use anyhow::Result;
 
+mod camera;
 mod hit;
 mod misc;
 mod output;
