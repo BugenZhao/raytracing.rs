@@ -8,7 +8,7 @@ use crate::{
     hit::{HitRecord, Hittable, HittableList},
     output::output_png,
     ray::Ray,
-    sphere::Sphere,
+    scene,
     vec3::{Color, Coord, RelColor},
 };
 
@@ -30,7 +30,7 @@ pub fn ray_color(ray: &Ray, list: &HittableList) -> Color {
 
 pub fn render() -> Result<()> {
     const ASPECT_RATIO: f64 = 16. / 9.;
-    const WIDTH: u32 = 800;
+    const WIDTH: u32 = 400;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
 
     let vp_height = 2.;
@@ -42,8 +42,7 @@ pub fn render() -> Result<()> {
     let vert = Coord::new(0., vp_height, 0.);
     let corner: Coord = origin - hori / 2. - vert / 2. - Coord::new(0., 0., focal_length);
 
-    let sphere = Sphere::new(Coord::new(0., 0., -1.), 0.5);
-    let hittable_list = HittableList::new(vec![Box::new(sphere)]);
+    let scene = scene::simple_scene();
 
     let data = iproduct!((0..HEIGHT).rev(), (0..WIDTH))
         .collect::<Vec<_>>()
@@ -54,7 +53,7 @@ pub fn render() -> Result<()> {
             let dir: Coord = corner + hori * u + vert * v - origin;
             let ray = Ray::new(origin, dir);
 
-            ray_color(&ray, &hittable_list)
+            ray_color(&ray, &scene.world)
         })
         .collect::<Vec<_>>();
 
