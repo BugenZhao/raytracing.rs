@@ -1,45 +1,8 @@
-use std::f64::INFINITY;
-
 use anyhow::Result;
 use itertools::iproduct;
 use rayon::prelude::*;
 
-use crate::{
-    hit::{HitRecord, Hittable, HittableList},
-    material::ScatterRecord,
-    output::output_png,
-    ray::Ray,
-    scene,
-    vec3::{Coord, RelColor},
-};
-
-pub fn ray_rel_color(ray: &Ray, world: &HittableList, depth: usize) -> RelColor {
-    let black = RelColor::zeros();
-
-    if depth == 0 {
-        return black;
-    }
-
-    match world.hit(ray, 0.001, INFINITY) {
-        Some(hit) => {
-            if let Some(ScatterRecord {
-                scattered_ray,
-                attenuation,
-            }) = hit.material.scatter(ray, &hit)
-            {
-                ray_rel_color(&scattered_ray, world, depth - 1).elemul(attenuation)
-            } else {
-                black
-            }
-        }
-        None => {
-            let unit_dir = ray.dir.unit();
-            let t = 0.5 * (unit_dir.y + 1.);
-            let bg_color = RelColor::new(1., 1., 1.) * (1. - t) + RelColor::new(0.5, 0.7, 1.) * t;
-            bg_color
-        }
-    }
-}
+use crate::{output::output_png, scene, vec3::RelColor};
 
 pub fn render() -> Result<()> {
     let scene = scene::simple_scene();
@@ -65,8 +28,7 @@ pub fn render() -> Result<()> {
                     let v = (j as f64 + (b as f64 + 0.5) * SAMPLE_STEP) / (height - 1) as f64;
                     let ray = scene.camera.ray(u, v);
 
-                    color
-                        + (ray_rel_color(&ray, &scene.world, MAX_DEPTH) / SAMPLES_PER_PIXEL as f64)
+                    color + (scene.world.rel_color_of(&ray, MAX_DEPTH) / SAMPLES_PER_PIXEL as f64)
                 });
 
             mean_rel_color.into_8bit_color().into_vec()

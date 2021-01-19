@@ -1,13 +1,13 @@
 use crate::{
     camera::Camera,
-    hit::HittableList,
+    hit::World,
     material::{Diffuse, DiffuseMethod},
     sphere::Sphere,
     vec3::{Coord, RelColor},
 };
 
 pub struct Scene {
-    pub world: HittableList,
+    pub world: World,
     pub camera: Camera,
 }
 
@@ -17,7 +17,7 @@ pub fn simple_scene() -> Scene {
     let ground = Sphere::new(Coord::new(0., -100.5, -1.), 100., material.clone());
 
     Scene {
-        world: HittableList::new(vec![Box::new(sphere), Box::new(ground)]),
+        world: World::new(vec![Box::new(sphere), Box::new(ground)]),
         camera: Camera::default(),
     }
 }
