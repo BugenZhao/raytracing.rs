@@ -41,8 +41,8 @@ pub enum DiffuseMethod {
 
 #[derive(Clone)]
 pub struct Diffuse {
-    pub albedo: RelColor,
-    pub method: DiffuseMethod,
+    albedo: RelColor,
+    method: DiffuseMethod,
 }
 
 impl Diffuse {
