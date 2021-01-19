@@ -1,6 +1,5 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
-use arrayvec::ArrayVec;
 use num::Float;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
