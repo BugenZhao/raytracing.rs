@@ -1,4 +1,8 @@
-use crate::{material::Material, ray::Ray, vec3::Coord};
+use crate::{
+    material::Material,
+    ray::Ray,
+    vec3::{Coord, RelColor},
+};
 
 pub struct HitRecord<'a> {
     pub point: Coord,
@@ -10,4 +14,9 @@ pub struct HitRecord<'a> {
 
 pub trait Hittable: Send + Sync {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
+}
+
+pub struct ScatterRecord {
+    pub scattered_ray: Ray,
+    pub attenuation: RelColor,
 }

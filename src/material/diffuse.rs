@@ -1,17 +1,10 @@
 use crate::{
-    hit::HitRecord,
+    hit_scatter::{HitRecord, ScatterRecord},
     ray::Ray,
     vec3::{Coord, RelColor},
 };
 
-pub struct ScatterRecord {
-    pub scattered_ray: Ray,
-    pub attenuation: RelColor,
-}
-
-pub trait Material: Send + Sync {
-    fn scatter(&self, ray: &Ray, hit: &HitRecord) -> Option<ScatterRecord>;
-}
+use super::Material;
 
 #[derive(Clone)]
 pub enum DiffuseMethod {

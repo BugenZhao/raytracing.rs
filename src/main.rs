@@ -2,7 +2,7 @@
 
 use anyhow::Result;
 
-mod hit;
+mod hit_scatter;
 mod material;
 mod output;
 mod ray;
