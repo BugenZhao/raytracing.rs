@@ -2,10 +2,8 @@
 
 use anyhow::Result;
 
-mod camera;
 mod hit;
 mod material;
-mod misc;
 mod output;
 mod ray;
 mod render;

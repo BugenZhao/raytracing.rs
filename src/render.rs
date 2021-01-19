@@ -5,7 +5,7 @@ use rayon::prelude::*;
 use crate::{output::output_png, scene, vec3::RelColor};
 
 pub fn render() -> Result<()> {
-    let scene = scene::simple_scene();
+    let scene = scene::examples::simple_scene();
     let aspect_ratio = scene.camera.aspect_ratio;
 
     let width: u32 = 800;

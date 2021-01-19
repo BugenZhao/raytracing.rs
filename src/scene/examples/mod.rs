@@ -1,15 +1,10 @@
 use crate::{
-    camera::Camera,
-    hit::World,
     material::{Diffuse, DiffuseMethod},
     sphere::Sphere,
     vec3::{Coord, RelColor},
 };
 
-pub struct Scene {
-    pub world: World,
-    pub camera: Camera,
-}
+use super::{camera::Camera, world::World, Scene};
 
 pub fn simple_scene() -> Scene {
     let material = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Basic);
