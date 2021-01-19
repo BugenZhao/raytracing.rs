@@ -1,4 +1,7 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::{
+    iter::Sum,
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
+};
 
 use num::Float;
 
@@ -11,7 +14,7 @@ pub struct Vec3<T> {
 
 pub type Coord = Vec3<f64>;
 pub type RelColor = Vec3<f64>;
-pub type Color = Vec<u8>;
+pub type Color = Vec3<u8>;
 
 impl<T> Vec3<T> {
     pub fn new(x: T, y: T, z: T) -> Self {
@@ -44,11 +47,11 @@ impl<T: Float> Vec3<T> {
 impl RelColor {
     pub fn into_8bit_color(self) -> Color {
         let max = 255.999;
-        vec![
+        Color::new(
             (self.x * max) as u8,
             (self.y * max) as u8,
             (self.z * max) as u8,
-        ]
+        )
     }
 }
 
@@ -170,6 +173,16 @@ impl<T: Float> Div<T> for Vec3<T> {
 impl<T: Float> DivAssign<T> for Vec3<T> {
     fn div_assign(&mut self, rhs: T) {
         *self = *self / rhs;
+    }
+}
+
+impl<T: Float> Sum for Vec3<T> {
+    fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+        let mut ans = Self::zeros();
+        for v in iter {
+            ans += v;
+        }
+        ans
     }
 }
 
