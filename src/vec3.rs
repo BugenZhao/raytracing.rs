@@ -4,6 +4,7 @@ use std::{
 };
 
 use num::Float;
+use rand::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3<T> {
@@ -213,6 +214,23 @@ impl<T: Float> Vec3<T> {
     }
 }
 
+// Random
+impl Vec3<f64> {
+    pub fn random(min: f64, max: f64) -> Self {
+        let mut rng = rand::thread_rng();
+        Self::new(
+            rng.gen_range(min..=max),
+            rng.gen_range(min..=max),
+            rng.gen_range(min..=max),
+        )
+    }
+
+    pub fn random_in_unit_sphere() -> Self {
+        let u = rand::random::<f64>().powf(1. / 3.);
+        Self::random(-1., 1.).unit() * u
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -335,5 +353,21 @@ mod tests {
     #[should_panic]
     fn test_unit_panic() {
         Vec3::new(0.0, 0.0, 0.0).unit();
+    }
+
+    #[test]
+    fn test_sum() {
+        let arr = vec![
+            Vec3::new(1., 2., 3.),
+            Vec3::new(4., 5., 6.),
+            Vec3::new(7., 8., 9.),
+        ];
+        let sum: Vec3<_> = arr.into_iter().sum();
+        assert_eq!(sum, Vec3::new(12., 15., 18.));
+    }
+
+    #[test]
+    fn test_random() {
+        assert!((0..10000).all(|_| Vec3::<f64>::random_in_unit_sphere().length() <= 1.));
     }
 }
