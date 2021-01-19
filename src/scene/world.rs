@@ -1,17 +1,18 @@
 use std::{cmp::Ordering, f64::INFINITY};
 
 use crate::{
-    hit_scatter::{HitRecord, Hittable, ScatterRecord},
+    hit_scatter::{HitRecord, ScatterRecord},
+    object::Object,
     ray::Ray,
     vec3::RelColor,
 };
 
 pub struct World {
-    pub list: Vec<Box<dyn Hittable>>,
+    pub list: Vec<Box<dyn Object>>,
 }
 
 impl World {
-    pub fn new(list: Vec<Box<dyn Hittable>>) -> Self {
+    pub fn new(list: Vec<Box<dyn Object>>) -> Self {
         Self { list }
     }
 
@@ -46,7 +47,7 @@ impl World {
     }
 }
 
-impl Hittable for World {
+impl Object for World {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         self.list
             .iter()

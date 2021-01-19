@@ -12,10 +12,6 @@ pub struct HitRecord<'a> {
     pub material: &'a dyn Material,
 }
 
-pub trait Hittable: Send + Sync {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
-}
-
 pub struct ScatterRecord {
     pub scattered_ray: Ray,
     pub attenuation: RelColor,

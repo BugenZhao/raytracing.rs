@@ -1,9 +1,6 @@
-use crate::{
-    hit_scatter::{HitRecord, Hittable},
-    material::Material,
-    ray::Ray,
-    vec3::Coord,
-};
+use crate::{hit_scatter::HitRecord, material::Material, ray::Ray, vec3::Coord};
+
+use super::Object;
 
 pub struct Sphere<M: Material> {
     pub center: Coord,
@@ -21,7 +18,7 @@ impl<M: Material> Sphere<M> {
     }
 }
 
-impl<M: Material> Hittable for Sphere<M> {
+impl<M: Material> Object for Sphere<M> {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let oc = ray.origin - self.center;
         let a = ray.dir.squared_length();

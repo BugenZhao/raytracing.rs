@@ -1,6 +1,6 @@
 use crate::{
     material::{Diffuse, DiffuseMethod},
-    sphere::Sphere,
+    object::Sphere,
     vec3::{Coord, RelColor},
 };
 
