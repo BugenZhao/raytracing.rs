@@ -22,7 +22,7 @@ impl<M: Material> Object for Sphere<M> {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let oc = ray.origin - self.center;
         let a = ray.dir.squared_length();
-        let b = 2. * (ray.dir * oc);
+        let b = 2. * (ray.dir.dot(oc));
         let c = oc.squared_length() - self.radius * self.radius;
 
         let d = b * b - 4. * a * c;
@@ -42,7 +42,7 @@ impl<M: Material> Object for Sphere<M> {
             if let Some(t) = cand_t {
                 let point = ray.at(t);
                 let outward_normal = (point - self.center).unit();
-                let front = (ray.dir * outward_normal) < 0.;
+                let front = (ray.dir.dot(outward_normal)) < 0.;
 
                 let normal = if front {
                     outward_normal

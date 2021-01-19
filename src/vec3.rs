@@ -142,14 +142,6 @@ impl<T: Float> Mul<T> for Vec3<T> {
     }
 }
 
-impl<T: Float> Mul for Vec3<T> {
-    type Output = T;
-
-    fn mul(self, rhs: Self) -> T {
-        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
-    }
-}
-
 impl<T: Float> MulAssign<T> for Vec3<T> {
     fn mul_assign(&mut self, rhs: T) {
         *self = *self * rhs;
@@ -188,9 +180,8 @@ impl<T: Float> Sum for Vec3<T> {
 }
 
 impl<T: Float> Vec3<T> {
-    #[deprecated]
     pub fn dot(self, rhs: Self) -> T {
-        self * rhs
+        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }
 
     pub fn elemul(self, rhs: Self) -> Self {
@@ -288,8 +279,8 @@ mod tests {
         assert_eq!(x, Vec3::new(0.0, -1.0, -2.0))
     }
     #[test]
-    fn test_mul() {
-        assert_eq!(Vec3::new(1.0, 0.0, -1.0) * Vec3::ones(), 0.0);
+    fn test_dot() {
+        assert_eq!(Vec3::new(1.0, 0.0, -1.0).dot(Vec3::ones()), 0.0);
     }
     #[test]
     fn test_mul_assign() {

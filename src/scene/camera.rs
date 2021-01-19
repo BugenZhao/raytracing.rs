@@ -10,7 +10,7 @@ pub struct Camera {
 }
 
 impl Camera {
-    const WIDE: f64 = 16. / 9.;
+    pub const WIDE: f64 = 16. / 9.;
 
     pub fn new(aspect_ratio: f64, vp_height: f64, focal_length: f64, origin: Coord) -> Self {
         let vp_width = vp_height * aspect_ratio;
