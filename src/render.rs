@@ -1,19 +1,23 @@
+use std::f64::INFINITY;
+
 use anyhow::Result;
 use itertools::iproduct;
 use rayon::prelude::*;
 
 use crate::{
-    misc::{hit_sphere, Sphere},
+    hit::{HitRecord, Hittable, HittableList},
     output::output_png,
     ray::Ray,
+    sphere::Sphere,
     vec3::{Color, Coord, RelColor},
 };
 
-pub fn ray_color(ray: &Ray, sphere: &Sphere) -> Color {
-    let hit_t = hit_sphere(ray, &sphere);
-    if hit_t > 0. {
-        let normal: Coord = (ray.at(hit_t) - sphere.center).unit();
-        return ((normal + 1.) / 2.).into_8bit_color();
+pub fn ray_color(ray: &Ray, list: &HittableList) -> Color {
+    match list.hit(ray, 0., INFINITY) {
+        Some(HitRecord { normal, .. }) => {
+            return ((normal + 1.) * 0.5).into_8bit_color();
+        }
+        None => {}
     }
 
     let unit_dir = ray.dir.unit();
@@ -39,6 +43,7 @@ pub fn render() -> Result<()> {
     let corner: Coord = origin - hori / 2. - vert / 2. - Coord::new(0., 0., focal_length);
 
     let sphere = Sphere::new(Coord::new(0., 0., -1.), 0.5);
+    let hittable_list = HittableList::new(vec![Box::new(sphere)]);
 
     let data = iproduct!((0..HEIGHT).rev(), (0..WIDTH))
         .collect::<Vec<_>>()
@@ -49,7 +54,7 @@ pub fn render() -> Result<()> {
             let dir: Coord = corner + hori * u + vert * v - origin;
             let ray = Ray::new(origin, dir);
 
-            ray_color(&ray, &sphere)
+            ray_color(&ray, &hittable_list)
         })
         .collect::<Vec<_>>();
 
