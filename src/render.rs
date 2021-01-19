@@ -9,32 +9,40 @@ use crate::{
     output::output_png,
     ray::Ray,
     scene,
-    vec3::RelColor,
+    vec3::{Coord, RelColor},
 };
 
-pub fn ray_rel_color(ray: &Ray, list: &HittableList) -> RelColor {
-    match list.hit(ray, 0., INFINITY) {
-        Some(HitRecord { normal, .. }) => {
-            return (normal + 1.) * 0.5;
-        }
-        None => {}
+pub fn ray_rel_color(ray: &Ray, world: &HittableList, depth: usize) -> RelColor {
+    if depth == 0 {
+        return RelColor::zeros();
     }
 
-    let unit_dir = ray.dir.unit();
-    let t = 0.5 * (unit_dir.y + 1.);
-
-    RelColor::new(1., 1., 1.) * (1. - t) + RelColor::new(0.5, 0.7, 1.) * t
+    match world.hit(ray, 0.001, INFINITY) {
+        Some(HitRecord { normal, point, .. }) => {
+            // (normal + 1.) * 0.5
+            let reflected_ray = Ray::new(point, normal + Coord::random_in_unit_sphere());
+            ray_rel_color(&reflected_ray, world, depth - 1) * 0.8
+        }
+        None => {
+            let unit_dir = ray.dir.unit();
+            let t = 0.5 * (unit_dir.y + 1.);
+            let bg_color = RelColor::new(1., 1., 1.) * (1. - t) + RelColor::new(0.5, 0.7, 1.) * t;
+            bg_color
+        }
+    }
 }
 
 pub fn render() -> Result<()> {
     let scene = scene::simple_scene();
     let aspect_ratio = scene.camera.aspect_ratio;
 
-    let width: u32 = 400;
+    let width: u32 = 800;
     let height: u32 = (width as f64 / aspect_ratio) as u32;
 
+    const MAX_DEPTH: usize = 50;
+
     // antialiasing
-    const SAMPLES_PER_AXIS: u32 = 4;
+    const SAMPLES_PER_AXIS: u32 = 10;
     const SAMPLES_PER_PIXEL: u32 = SAMPLES_PER_AXIS * SAMPLES_PER_AXIS;
     const SAMPLE_STEP: f64 = 1f64 / SAMPLES_PER_AXIS as f64;
 
@@ -48,7 +56,8 @@ pub fn render() -> Result<()> {
                     let v = (j as f64 + (b as f64 + 0.5) * SAMPLE_STEP) / (height - 1) as f64;
                     let ray = scene.camera.ray(u, v);
 
-                    color + (ray_rel_color(&ray, &scene.world) / SAMPLES_PER_PIXEL as f64)
+                    color
+                        + (ray_rel_color(&ray, &scene.world, MAX_DEPTH) / SAMPLES_PER_PIXEL as f64)
                 });
 
             mean_rel_color.into_8bit_color().into_vec()

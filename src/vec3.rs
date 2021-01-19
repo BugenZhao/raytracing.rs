@@ -47,12 +47,12 @@ impl<T: Float> Vec3<T> {
 
 impl RelColor {
     pub fn into_8bit_color(self) -> Color {
-        let max = 255.999;
-        Color::new(
-            (self.x * max) as u8,
-            (self.y * max) as u8,
-            (self.z * max) as u8,
-        )
+        macro_rules! conv {
+            ($field:ident) => {
+                (self.$field.min(0.999).max(0.) * 256.) as u8
+            };
+        }
+        Color::new(conv!(x), conv!(y), conv!(z))
     }
 }
 
