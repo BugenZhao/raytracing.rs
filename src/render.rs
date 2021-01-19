@@ -6,6 +6,7 @@ use rayon::prelude::*;
 
 use crate::{
     hit::{HitRecord, Hittable, HittableList},
+    material::ScatterRecord,
     output::output_png,
     ray::Ray,
     scene,
@@ -13,15 +14,23 @@ use crate::{
 };
 
 pub fn ray_rel_color(ray: &Ray, world: &HittableList, depth: usize) -> RelColor {
+    let black = RelColor::zeros();
+
     if depth == 0 {
-        return RelColor::zeros();
+        return black;
     }
 
     match world.hit(ray, 0.001, INFINITY) {
-        Some(HitRecord { normal, point, .. }) => {
-            // (normal + 1.) * 0.5
-            let reflected_ray = Ray::new(point, normal + Coord::random_in_unit_sphere());
-            ray_rel_color(&reflected_ray, world, depth - 1) * 0.8
+        Some(hit) => {
+            if let Some(ScatterRecord {
+                scattered_ray,
+                attenuation,
+            }) = hit.material.scatter(ray, &hit)
+            {
+                ray_rel_color(&scattered_ray, world, depth - 1).elemul(attenuation)
+            } else {
+                black
+            }
         }
         None => {
             let unit_dir = ray.dir.unit();

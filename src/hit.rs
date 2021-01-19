@@ -1,12 +1,13 @@
 use std::cmp::Ordering;
 
-use crate::{ray::Ray, vec3::Coord};
+use crate::{material::Material, ray::Ray, vec3::Coord};
 
-pub struct HitRecord {
+pub struct HitRecord<'a> {
     pub point: Coord,
     pub normal: Coord,
     pub t: f64,
     pub front: bool,
+    pub material: &'a dyn Material,
 }
 
 pub trait Hittable: Send + Sync {
