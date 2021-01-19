@@ -9,11 +9,11 @@ use crate::{
     vec3::{Color, Coord, RelColor},
 };
 
-pub fn ray_color(ray: &Ray) -> Color {
-    let sphere = Sphere::new(Coord::new(0., 0., -1.), 0.5);
-
-    if hit_sphere(ray, &sphere) {
-        return RelColor::new(1., 0., 0.).into_8bit_color();
+pub fn ray_color(ray: &Ray, sphere: &Sphere) -> Color {
+    let hit_t = hit_sphere(ray, &sphere);
+    if hit_t > 0. {
+        let normal: Coord = (ray.at(hit_t) - sphere.center).unit();
+        return ((normal + 1.) / 2.).into_8bit_color();
     }
 
     let unit_dir = ray.dir.unit();
@@ -26,7 +26,7 @@ pub fn ray_color(ray: &Ray) -> Color {
 
 pub fn render() -> Result<()> {
     const ASPECT_RATIO: f64 = 16. / 9.;
-    const WIDTH: u32 = 400;
+    const WIDTH: u32 = 800;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
 
     let vp_height = 2.;
@@ -38,6 +38,8 @@ pub fn render() -> Result<()> {
     let vert = Coord::new(0., vp_height, 0.);
     let corner: Coord = origin - hori / 2. - vert / 2. - Coord::new(0., 0., focal_length);
 
+    let sphere = Sphere::new(Coord::new(0., 0., -1.), 0.5);
+
     let data = iproduct!((0..HEIGHT).rev(), (0..WIDTH))
         .collect::<Vec<_>>()
         .into_par_iter()
@@ -47,7 +49,7 @@ pub fn render() -> Result<()> {
             let dir: Coord = corner + hori * u + vert * v - origin;
             let ray = Ray::new(origin, dir);
 
-            ray_color(&ray)
+            ray_color(&ray, &sphere)
         })
         .collect::<Vec<_>>();
 

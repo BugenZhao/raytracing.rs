@@ -1,3 +1,5 @@
+use std::f64::INFINITY;
+
 use crate::{ray::Ray, vec3::Coord};
 
 #[derive(Debug)]
@@ -12,11 +14,16 @@ impl Sphere {
     }
 }
 
-pub fn hit_sphere(ray: &Ray, sphere: &Sphere) -> bool {
+pub fn hit_sphere(ray: &Ray, sphere: &Sphere) -> f64 {
     let oc = ray.origin - sphere.center;
     let a = ray.dir.squared_length();
     let b = 2. * (ray.dir * oc);
     let c = oc.squared_length() - sphere.radius * sphere.radius;
 
-    (b * b - 4. * a * c).is_sign_positive()
+    let d = b * b - 4. * a * c;
+    if d < 0. {
+        -INFINITY
+    } else {
+        (-b - d.sqrt()) / 2. * a
+    }
 }
