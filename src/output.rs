@@ -24,6 +24,7 @@ pub fn example_png() -> Result<()> {
         })
         .collect();
 
+    assert_eq!(data.len(), (WIDTH * HEIGHT) as usize);
     writer.write_image_data(&data)?;
 
     Ok(())

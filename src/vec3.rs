@@ -1,16 +1,17 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
+use arrayvec::ArrayVec;
 use num::Float;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-struct Vec3<T: Float> {
+pub struct Vec3<T> {
     pub x: T,
     pub y: T,
     pub z: T,
 }
 
-type Point = Vec3<f64>;
-type Color = Vec3<f32>;
+pub type Coord = Vec3<f64>;
+pub type Color = Vec3<f64>;
 
 impl<T: Float> Vec3<T> {
     pub fn new(x: T, y: T, z: T) -> Self {
@@ -27,6 +28,12 @@ impl<T: Float> Vec3<T> {
 
     pub fn length(&self) -> T {
         self.squared_length().sqrt()
+    }
+}
+
+impl<T> Vec3<T> {
+    pub fn into_arrayvec(self) -> ArrayVec<[T; 3]> {
+        ArrayVec::from([self.x, self.y, self.z])
     }
 }
 
