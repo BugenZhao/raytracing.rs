@@ -4,7 +4,8 @@ use crate::{
     vec3::{Coord, RelColor},
 };
 
-use super::Material;
+use super::{coord_ext, Material};
+use coord_ext::CoordRandomExt;
 
 fn reflect(v: Coord, n: Coord) -> Coord {
     let b = n * n.dot(v) / n.squared_length(); // n.unit() * (n.dot(v) / n.length());
@@ -14,11 +15,12 @@ fn reflect(v: Coord, n: Coord) -> Coord {
 #[derive(Clone)]
 pub struct Metal {
     albedo: RelColor,
+    fuzz: f64,
 }
 
 impl Metal {
-    pub fn new(albedo: RelColor) -> Self {
-        Self { albedo }
+    pub fn new(albedo: RelColor, fuzz: f64) -> Self {
+        Self { albedo, fuzz }
     }
 }
 
@@ -28,7 +30,10 @@ impl Material for Metal {
 
         if reflected_dir.dot(hit.normal) > 0. {
             // TODO: why?
-            let scattered_ray = Ray::new(hit.point, reflected_dir);
+            let scattered_ray = Ray::new(
+                hit.point,
+                reflected_dir + Coord::random_in_unit_sphere() * self.fuzz,
+            );
 
             Some(ScatterRecord {
                 scattered_ray,

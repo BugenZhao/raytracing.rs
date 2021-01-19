@@ -5,6 +5,7 @@ use crate::{
 
 mod diffuse;
 mod metal;
+mod coord_ext;
 
 pub use diffuse::*;
 pub use metal::*;
