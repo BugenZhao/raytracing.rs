@@ -4,7 +4,10 @@ use itertools::iproduct;
 use rayon::prelude::*;
 use scene::Scene;
 
-use crate::{output::output_png, scene, vec3::RelColor};
+use crate::{scene, vec3::RelColor};
+
+mod config;
+mod image;
 
 const MAX_DEPTH: usize = 50;
 const WIDTH: u32 = 800;
@@ -39,5 +42,5 @@ pub fn render(scene: &Scene) -> Result<()> {
         })
         .collect();
 
-    output_png(&format!("out/{}.png", scene.name), &data, width, height)
+    image::output_png(&format!("out/{}.png", scene.name), &data, width, height)
 }
