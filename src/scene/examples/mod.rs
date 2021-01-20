@@ -6,10 +6,9 @@ use crate::{
 
 use rand::{distributions::WeightedIndex, prelude::*};
 
-use super::{camera::Camera, world::World, Scene};
+use super::{camera::Camera, session::RenderSession, world::World, Scene};
 
-#[allow(unused_variables)]
-pub fn simple_scene() -> Scene<'static> {
+pub fn simple() -> RenderSession<'static> {
     let diffuse = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
     let diffuse_green = Diffuse::new(RelColor::new(0.3, 0.9, 0.3), DiffuseMethod::Lambertian);
     let diffuse_red = Diffuse::new(RelColor::new(0.95, 0.2, 0.2), DiffuseMethod::Lambertian);
@@ -22,7 +21,7 @@ pub fn simple_scene() -> Scene<'static> {
     let left_sphere = Sphere::new(Coord::new(-0.9, -0.3, -0.9), 0.2, metal_gold.clone());
     let ground = Sphere::new(Coord::new(0., -100.5, -1.), 100., diffuse.clone());
 
-    Scene {
+    RenderSession::new_default(Scene {
         world: World::new(vec![
             Box::new(sphere),
             Box::new(back_sphere),
@@ -32,11 +31,10 @@ pub fn simple_scene() -> Scene<'static> {
         ]),
         camera: Camera::new_distant(true),
         name: "simple",
-    }
+    })
 }
 
-#[allow(unused_variables)]
-pub fn glass_scene() -> Scene<'static> {
+pub fn glasses() -> RenderSession<'static> {
     let diffuse = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
     let glass = Dialectric::new(1.5);
     let diffuse_red = Diffuse::new(RelColor::new(0.95, 0.2, 0.2), DiffuseMethod::Lambertian);
@@ -47,7 +45,7 @@ pub fn glass_scene() -> Scene<'static> {
     let right_sphere = Sphere::new(Coord::new(0.6, 0., -1.), 0.3, diffuse_green.clone());
     let ground = Sphere::new(Coord::new(0., -100.5, -1.), 100., diffuse.clone());
 
-    Scene {
+    RenderSession::new_default(Scene {
         world: World::new(vec![
             Box::new(left_sphere),
             Box::new(mid_sphere),
@@ -56,11 +54,10 @@ pub fn glass_scene() -> Scene<'static> {
         ]),
         camera: Camera::default(),
         name: "glass",
-    }
+    })
 }
 
-#[allow(unused_variables)]
-pub fn lots_of_spheres_scene() -> Scene<'static> {
+pub fn lots_of_spheres() -> RenderSession<'static> {
     let diffuse = Diffuse::new(RelColor::new(0.8, 0.8, 0.8), DiffuseMethod::Lambertian);
     let random_diffuse = || Diffuse::new(RelColor::random(0., 0.7), DiffuseMethod::Lambertian);
     let random_metal = || {
@@ -99,7 +96,7 @@ pub fn lots_of_spheres_scene() -> Scene<'static> {
         }
     }
 
-    Scene {
+    RenderSession::new_default(Scene {
         world: World::new(list),
         camera: Camera::new(
             Camera::CINEMA,
@@ -111,5 +108,5 @@ pub fn lots_of_spheres_scene() -> Scene<'static> {
             0.,
         ),
         name: "lots_of_spheres",
-    }
+    })
 }

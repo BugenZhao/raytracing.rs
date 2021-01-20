@@ -2,41 +2,38 @@ use anyhow::Result;
 use indicatif::ParallelProgressIterator;
 use itertools::iproduct;
 use rayon::prelude::*;
-use scene::Scene;
+use scene::session::RenderSession;
 
 use crate::{scene, vec3::RelColor};
 
-mod config;
 mod image;
 
-const MAX_DEPTH: usize = 50;
-const WIDTH: u32 = 800;
-// antialiasing
-const SAMPLES_PER_AXIS: u32 = if cfg!(debug_assertions) { 2 } else { 16 };
-const SAMPLES_PER_PIXEL: u32 = SAMPLES_PER_AXIS * SAMPLES_PER_AXIS;
-const SAMPLE_STEP: f64 = 1f64 / SAMPLES_PER_AXIS as f64;
-
-pub fn render(scene: &Scene) -> Result<()> {
-    let aspect_ratio = scene.camera.aspect_ratio;
-
-    let width: u32 = WIDTH;
-    let height: u32 = (width as f64 / aspect_ratio) as u32;
+pub fn render(session: RenderSession) -> Result<()> {
+    let RenderSession {
+        width,
+        max_depth,
+        samples_per_pixel_axis,
+        scene,
+        height,
+        samples_per_pixel,
+        sample_step,
+    } = session;
 
     let data: Vec<u8> = iproduct!((0..height).rev(), (0..width))
         .collect::<Vec<_>>()
         .par_iter()
         .progress_count((width * height) as u64)
         .flat_map(|(j, i)| {
-            (iproduct!((0..SAMPLES_PER_AXIS), (0..SAMPLES_PER_AXIS)).fold(
+            (iproduct!((0..samples_per_pixel_axis), (0..samples_per_pixel_axis)).fold(
                 RelColor::zeros(),
                 |acc, (a, b)| {
-                    let u = (*i as f64 + (a as f64 + 0.5) * SAMPLE_STEP) / (width - 1) as f64;
-                    let v = (*j as f64 + (b as f64 + 0.5) * SAMPLE_STEP) / (height - 1) as f64;
+                    let u = (*i as f64 + (a as f64 + 0.5) * sample_step) / (width - 1) as f64;
+                    let v = (*j as f64 + (b as f64 + 0.5) * sample_step) / (height - 1) as f64;
                     let ray = scene.camera.ray(u, v);
 
-                    acc + scene.world.rel_color_of(&ray, MAX_DEPTH)
+                    acc + scene.world.rel_color_of(&ray, max_depth)
                 },
-            ) / SAMPLES_PER_PIXEL as f64)
+            ) / samples_per_pixel as f64)
                 .into_8bit_color()
                 .into_vec()
         })
