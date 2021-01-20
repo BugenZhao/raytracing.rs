@@ -56,7 +56,7 @@ impl RelColor {
     pub fn into_8bit_color(self) -> Color {
         macro_rules! conv {
             ($field:ident) => {
-                (self.$field.min(0.999).max(0.) * 256.) as u8
+                (self.$field.sqrt().min(0.999).max(0.) * 256.) as u8
             };
         }
         Color::new(conv!(x), conv!(y), conv!(z))

@@ -179,7 +179,7 @@ pub fn weekend_final() -> RenderSession<'static> {
     RenderSession::new(
         1200,
         50,
-        23,
+        10,
         Scene::new(
             World::new(list),
             Camera::new(
