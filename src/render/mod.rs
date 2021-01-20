@@ -26,17 +26,18 @@ pub fn render(session: RenderSession) -> Result<()> {
             .template("[{elapsed_precise}/{eta_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7}")
             .progress_chars("##-"),
     );
+    bar.set_draw_delta(2000.min((width * height) as u64 / 100));
 
     let data: Vec<u8> = iproduct!((0..height).rev(), (0..width))
         .collect::<Vec<_>>()
-        .par_iter()
+        .into_par_iter()
         .progress_with(bar)
-        .flat_map(|(j, i)| {
+        .flat_map_iter(|(j, i)| {
             (iproduct!((0..samples_per_pixel_axis), (0..samples_per_pixel_axis)).fold(
                 RelColor::zeros(),
                 |acc, (a, b)| {
-                    let u = (*i as f64 + (a as f64 + 0.5) * sample_step) / (width - 1) as f64;
-                    let v = (*j as f64 + (b as f64 + 0.5) * sample_step) / (height - 1) as f64;
+                    let u = (i as f64 + (a as f64 + 0.5) * sample_step) / (width - 1) as f64;
+                    let v = (j as f64 + (b as f64 + 0.5) * sample_step) / (height - 1) as f64;
                     let ray = scene.camera.ray(u, v);
 
                     acc + scene.world.rel_color_of(&ray, max_depth)
