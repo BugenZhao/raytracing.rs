@@ -1,6 +1,5 @@
 use crate::{
-    hit_scatter::{HitRecord, ScatterRecord},
-    ray::Ray,
+    ray::{HitRecord, Ray, ScatterRecord},
     vec3::{Coord, RelColor},
 };
 

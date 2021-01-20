@@ -1,5 +1,8 @@
 use crate::vec3::Coord;
 
+mod hit_scatter;
+pub use hit_scatter::*;
+
 pub struct Ray {
     pub origin: Coord,
     pub dir: Coord,

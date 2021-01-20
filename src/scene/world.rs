@@ -1,9 +1,8 @@
 use std::{cmp::Ordering, f64::INFINITY};
 
 use crate::{
-    hit_scatter::{HitRecord, ScatterRecord},
     object::Object,
-    ray::Ray,
+    ray::{HitRecord, Ray, ScatterRecord},
     vec3::RelColor,
 };
 

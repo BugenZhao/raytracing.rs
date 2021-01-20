@@ -1,4 +1,8 @@
-use crate::{hit_scatter::HitRecord, material::Material, ray::Ray, vec3::Coord};
+use crate::{
+    material::Material,
+    ray::{HitRecord, Ray},
+    vec3::Coord,
+};
 
 use super::Object;
 
