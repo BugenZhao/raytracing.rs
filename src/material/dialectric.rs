@@ -25,7 +25,8 @@ impl Material for Dialectric {
             self.refract_idx
         };
         let scattered_dir =
-            coord_utils::refract_or_reflect(ray.dir, hit.normal, etai_over_etat).unit();
+            coord_utils::refract_or_reflect(ray.dir, hit.normal, etai_over_etat, self.refract_idx)
+                .unit();
         let scattered_ray = Ray::new(hit.point, scattered_dir);
 
         Some(ScatterRecord {

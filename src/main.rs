@@ -12,7 +12,7 @@ mod scene;
 mod vec3;
 
 fn main() -> Result<()> {
-    render::render()?;
+    render::render(&scene::examples::glass_scene())?;
 
     Ok(())
 }
