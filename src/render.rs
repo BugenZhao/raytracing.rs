@@ -1,4 +1,5 @@
 use anyhow::Result;
+use indicatif::ParallelProgressIterator;
 use itertools::iproduct;
 use rayon::prelude::*;
 use scene::Scene;
@@ -20,16 +21,17 @@ pub fn render(scene: &Scene) -> Result<()> {
 
     let data: Vec<u8> = iproduct!((0..height).rev(), (0..width))
         .collect::<Vec<_>>()
-        .into_par_iter()
+        .par_iter()
+        .progress_count((width * height) as u64)
         .flat_map(|(j, i)| {
             (iproduct!((0..SAMPLES_PER_AXIS), (0..SAMPLES_PER_AXIS)).fold(
                 RelColor::zeros(),
-                |color, (a, b)| {
-                    let u = (i as f64 + (a as f64 + 0.5) * SAMPLE_STEP) / (width - 1) as f64;
-                    let v = (j as f64 + (b as f64 + 0.5) * SAMPLE_STEP) / (height - 1) as f64;
+                |acc, (a, b)| {
+                    let u = (*i as f64 + (a as f64 + 0.5) * SAMPLE_STEP) / (width - 1) as f64;
+                    let v = (*j as f64 + (b as f64 + 0.5) * SAMPLE_STEP) / (height - 1) as f64;
                     let ray = scene.camera.ray(u, v);
 
-                    color + scene.world.rel_color_of(&ray, MAX_DEPTH)
+                    acc + scene.world.rel_color_of(&ray, MAX_DEPTH)
                 },
             ) / SAMPLES_PER_PIXEL as f64)
                 .into_8bit_color()

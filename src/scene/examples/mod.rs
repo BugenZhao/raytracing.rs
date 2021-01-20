@@ -1,8 +1,10 @@
 use crate::{
     material::{Dialectric, Diffuse, DiffuseMethod, Metal},
-    object::Sphere,
+    object::{Object, Sphere},
     vec3::{Coord, RelColor},
 };
+
+use rand::{distributions::WeightedIndex, prelude::*};
 
 use super::{camera::Camera, world::World, Scene};
 
@@ -33,6 +35,7 @@ pub fn simple_scene() -> Scene<'static> {
     }
 }
 
+#[allow(unused_variables)]
 pub fn glass_scene() -> Scene<'static> {
     let diffuse = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
     let glass = Dialectric::new(1.5);
@@ -53,5 +56,60 @@ pub fn glass_scene() -> Scene<'static> {
         ]),
         camera: Camera::default(),
         name: "glass",
+    }
+}
+
+#[allow(unused_variables)]
+pub fn lots_of_spheres_scene() -> Scene<'static> {
+    let diffuse = Diffuse::new(RelColor::new(0.8, 0.8, 0.8), DiffuseMethod::Lambertian);
+    let random_diffuse = || Diffuse::new(RelColor::random(0., 0.7), DiffuseMethod::Lambertian);
+    let random_metal = || {
+        Metal::new(
+            RelColor::random(0., 0.7),
+            rand::thread_rng().gen_range(0.05..0.2),
+        )
+    };
+    let random_glass = || Dialectric::new(rand::thread_rng().gen_range(1.05..2.0));
+
+    let mut list = Vec::<Box<dyn Object>>::new();
+    let ground = Sphere::new(Coord::new(0., -10000.3, -1.), 10000., diffuse.clone());
+    list.push(Box::new(ground));
+
+    let material_weights = [2, 2, 1];
+    let dist = WeightedIndex::new(&material_weights).unwrap();
+
+    for j in -7..=-1 {
+        for i in (-2 + j)..=(2 - j) {
+            macro_rules! push_sphere {
+                ($mat:expr) => {
+                    list.push(Box::new(Sphere::new(
+                        Coord::new(i as f64, 0., j as f64),
+                        0.3,
+                        $mat,
+                    )));
+                };
+            };
+
+            match dist.sample(&mut rand::thread_rng()) {
+                0 => push_sphere!(random_diffuse()),
+                1 => push_sphere!(random_metal()),
+                2 => push_sphere!(random_glass()),
+                _ => continue,
+            };
+        }
+    }
+
+    Scene {
+        world: World::new(list),
+        camera: Camera::new(
+            Camera::CINEMA,
+            100.,
+            Coord::new(0., 2., 0.5),
+            Coord::new(0., 0., -3.),
+            Camera::WORLD_UP,
+            0.1,
+            0.,
+        ),
+        name: "lots_of_spheres",
     }
 }

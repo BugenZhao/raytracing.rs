@@ -13,7 +13,7 @@ mod scene;
 mod vec3;
 
 fn main() -> Result<()> {
-    render::render(&scene::examples::simple_scene())?;
+    render::render(&scene::examples::lots_of_spheres_scene())?;
 
     Ok(())
 }

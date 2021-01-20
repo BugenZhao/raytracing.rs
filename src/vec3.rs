@@ -25,6 +25,10 @@ impl<T> Vec3<T> {
     pub fn into_vec(self) -> Vec<T> {
         vec![self.x, self.y, self.z]
     }
+
+    pub fn into_array(self) -> [T; 3] {
+        [self.x, self.y, self.z]
+    }
 }
 
 impl<T: Float> Vec3<T> {

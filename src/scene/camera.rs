@@ -27,7 +27,7 @@ impl Camera {
         look_at: Coord,
         vup: Coord,
         aperture: f64,
-        focus_dist: f64,
+        mut focus_dist: f64,
     ) -> Self {
         let theta = vertical_fov.to_radians();
         let h = (theta / 2.).tan();
@@ -38,6 +38,9 @@ impl Camera {
         let u = vup.cross(w).unit();
         let v = w.cross(u);
 
+        if focus_dist == 0. {
+            focus_dist = (look_at - origin).length();
+        }
         let horizontal = u * vp_width * focus_dist;
         let vertical = v * vp_height * focus_dist;
         let corner: Coord = origin - horizontal / 2. - vertical / 2. - w * focus_dist;
@@ -79,17 +82,14 @@ impl Default for Camera {
 
 impl Camera {
     pub fn new_distant(aperture: bool) -> Self {
-        let origin = Coord::new(-1.5, 1.5, 1.5);
-        let look_at = Coord::new(0., 0., 0.);
-        let focus_dist = (look_at - origin).length();
         Self::new(
             Self::WIDE,
             70.,
-            origin,
-            look_at,
+            Coord::new(-1.5, 1.5, 1.5),
+            Coord::new(0., 0., 0.),
             Camera::WORLD_UP,
             if aperture { 0.15 } else { 0. },
-            focus_dist,
+            0.,
         )
     }
 }

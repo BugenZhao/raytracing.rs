@@ -14,3 +14,4 @@ arrayvec = "0.5"
 num = "0.3"
 rayon = "1.5"
 rand = "0.8"
+indicatif = {version = "0.15", features = ["rayon"]}
