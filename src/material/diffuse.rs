@@ -4,8 +4,8 @@ use crate::{
     vec3::{Coord, RelColor},
 };
 
-use super::{coord_utils, Material};
-use coord_utils::CoordRandomExt;
+use super::Material;
+use crate::coord_ext::CoordRandomExt;
 
 #[derive(Clone)]
 pub enum DiffuseMethod {

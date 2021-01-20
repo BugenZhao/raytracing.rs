@@ -28,7 +28,7 @@ pub fn simple_scene() -> Scene<'static> {
             Box::new(right_sphere),
             Box::new(ground),
         ]),
-        camera: Camera::new_distant(),
+        camera: Camera::new_distant(true),
         name: "simple",
     }
 }

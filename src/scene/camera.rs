@@ -1,4 +1,4 @@
-use crate::{ray::Ray, vec3::Coord};
+use crate::{coord_ext::CoordRandomExt, ray::Ray, vec3::Coord};
 
 pub struct Camera {
     pub aspect_ratio: f64,
@@ -7,6 +7,7 @@ pub struct Camera {
     corner: Coord,
     horizontal: Coord,
     vertical: Coord,
+    lens_radius: f64,
 }
 
 impl Camera {
@@ -25,6 +26,8 @@ impl Camera {
         origin: Coord,
         look_at: Coord,
         vup: Coord,
+        aperture: f64,
+        focus_dist: f64,
     ) -> Self {
         let theta = vertical_fov.to_radians();
         let h = (theta / 2.).tan();
@@ -35,9 +38,11 @@ impl Camera {
         let u = vup.cross(w).unit();
         let v = w.cross(u);
 
-        let horizontal = u * vp_width;
-        let vertical = v * vp_height;
-        let corner: Coord = origin - horizontal / 2. - vertical / 2. - w;
+        let horizontal = u * vp_width * focus_dist;
+        let vertical = v * vp_height * focus_dist;
+        let corner: Coord = origin - horizontal / 2. - vertical / 2. - w * focus_dist;
+
+        let lens_radius = aperture / 2.;
 
         Self {
             aspect_ratio,
@@ -45,13 +50,16 @@ impl Camera {
             corner,
             horizontal,
             vertical,
+            lens_radius,
         }
     }
 
     pub fn ray(&self, u: f64, v: f64) -> Ray {
+        let offset_origin = Coord::random_in_unit_z_disk() * self.lens_radius + self.origin;
         let dir: Coord =
-            (self.corner + self.horizontal * u + self.vertical * v - self.origin).unit();
-        Ray::new(self.origin, dir)
+            (self.corner + self.horizontal * u + self.vertical * v - offset_origin).unit();
+
+        Ray::new(offset_origin, dir)
     }
 }
 
@@ -63,18 +71,25 @@ impl Default for Camera {
             Coord::new(0., 0., 0.),
             Coord::new(0., 0., -1.),
             Camera::WORLD_UP,
+            0.,
+            1.,
         )
     }
 }
 
 impl Camera {
-    pub fn new_distant() -> Self {
+    pub fn new_distant(aperture: bool) -> Self {
+        let origin = Coord::new(-1.5, 1.5, 1.5);
+        let look_at = Coord::new(0., 0., 0.);
+        let focus_dist = (look_at - origin).length();
         Self::new(
             Self::WIDE,
-            90.,
-            Coord::new(-1.5, 1.5, 1.5),
-            Coord::new(0., 0., 0.),
+            70.,
+            origin,
+            look_at,
             Camera::WORLD_UP,
+            if aperture { 0.15 } else { 0. },
+            focus_dist,
         )
     }
 }
