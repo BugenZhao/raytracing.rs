@@ -15,10 +15,14 @@ impl<'a> RenderSession<'a> {
     pub fn new(
         width: u32,
         max_depth: usize,
-        samples_per_pixel_axis: u32,
+        mut samples_per_pixel_axis: u32,
         scene: Scene<'a>,
     ) -> Self {
         let height = (width as f64 / scene.camera.aspect_ratio) as u32;
+
+        if cfg!(debug_assertions) {
+            samples_per_pixel_axis = 2
+        }
         let samples_per_pixel = samples_per_pixel_axis.pow(2);
         let sample_step = 1. / samples_per_pixel_axis as f64;
 
@@ -34,6 +38,6 @@ impl<'a> RenderSession<'a> {
     }
 
     pub fn new_default(scene: Scene<'a>) -> Self {
-        Self::new(800, 50, if cfg!(debug_assertions) { 2 } else { 16 }, scene)
+        Self::new(800, 50, 16, scene)
     }
 }
