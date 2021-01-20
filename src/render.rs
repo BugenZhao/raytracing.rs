@@ -7,7 +7,7 @@ use crate::{output::output_png, scene, vec3::RelColor};
 const MAX_DEPTH: usize = 50;
 const WIDTH: u32 = 800;
 // antialiasing
-const SAMPLES_PER_AXIS: u32 = 10;
+const SAMPLES_PER_AXIS: u32 = if cfg!(debug_assertions) { 2 } else { 10 };
 const SAMPLES_PER_PIXEL: u32 = SAMPLES_PER_AXIS * SAMPLES_PER_AXIS;
 const SAMPLE_STEP: f64 = 1f64 / SAMPLES_PER_AXIS as f64;
 

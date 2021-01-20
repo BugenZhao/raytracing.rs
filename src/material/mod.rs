@@ -3,12 +3,14 @@ use crate::{
     ray::Ray,
 };
 
+mod coord_utils;
+mod dialectric;
 mod diffuse;
 mod metal;
-mod coord_ext;
 
 pub use diffuse::*;
 pub use metal::*;
+pub use dialectric::*;
 
 pub trait Material: Send + Sync {
     fn scatter(&self, ray: &Ray, hit: &HitRecord) -> Option<ScatterRecord>;

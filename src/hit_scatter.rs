@@ -12,6 +12,25 @@ pub struct HitRecord<'a> {
     pub material: &'a dyn Material,
 }
 
+impl<'a> HitRecord<'a> {
+    pub fn new(
+        point: Coord,
+        normal: Coord,
+        t: f64,
+        front: bool,
+        material: &'a dyn Material,
+    ) -> Self {
+        debug_assert!((normal.length() - 1.).abs() < 1e-6);
+        Self {
+            point,
+            normal,
+            t,
+            front,
+            material,
+        }
+    }
+}
+
 pub struct ScatterRecord {
     pub scattered_ray: Ray,
     pub attenuation: RelColor,

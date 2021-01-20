@@ -37,8 +37,7 @@ impl World {
                 }
             }
             None => {
-                let unit_dir = ray.dir.unit();
-                let t = 0.5 * (unit_dir.y + 1.);
+                let t = 0.5 * (ray.dir.y + 1.);
                 let bg_color =
                     RelColor::new(1., 1., 1.) * (1. - t) + RelColor::new(0.5, 0.7, 1.) * t;
                 bg_color

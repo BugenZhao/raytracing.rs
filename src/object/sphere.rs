@@ -49,13 +49,8 @@ impl<M: Material> Object for Sphere<M> {
                 } else {
                     -outward_normal
                 };
-                Some(HitRecord {
-                    point,
-                    normal,
-                    t,
-                    front,
-                    material: &self.material,
-                })
+
+                Some(HitRecord::new(point, normal, t, front, &self.material))
             } else {
                 None
             }

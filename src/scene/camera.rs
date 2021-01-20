@@ -49,7 +49,8 @@ impl Camera {
     }
 
     pub fn ray(&self, u: f64, v: f64) -> Ray {
-        let dir: Coord = self.corner + self.horizontal * u + self.vertical * v - self.origin;
+        let dir: Coord =
+            (self.corner + self.horizontal * u + self.vertical * v - self.origin).unit();
         Ray::new(self.origin, dir)
     }
 }

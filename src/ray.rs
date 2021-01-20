@@ -7,6 +7,7 @@ pub struct Ray {
 
 impl Ray {
     pub fn new(origin: Coord, dir: Coord) -> Self {
+        debug_assert!((dir.length() - 1.).abs() < 1e-6);
         Self { origin, dir }
     }
 
