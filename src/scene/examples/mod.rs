@@ -7,7 +7,7 @@ use crate::{
 use super::{camera::Camera, world::World, Scene};
 
 #[allow(unused_variables)]
-pub fn simple_scene() -> Scene {
+pub fn simple_scene() -> Scene<'static> {
     let diffuse = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
     let diffuse_green = Diffuse::new(RelColor::new(0.3, 0.9, 0.3), DiffuseMethod::Lambertian);
     let diffuse_red = Diffuse::new(RelColor::new(0.95, 0.2, 0.2), DiffuseMethod::Lambertian);
@@ -29,10 +29,11 @@ pub fn simple_scene() -> Scene {
             Box::new(ground),
         ]),
         camera: Camera::new_distant(),
+        name: "simple",
     }
 }
 
-pub fn glass_scene() -> Scene {
+pub fn glass_scene() -> Scene<'static> {
     let diffuse = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
     let glass = Dialectric::new(1.5);
     let diffuse_red = Diffuse::new(RelColor::new(0.95, 0.2, 0.2), DiffuseMethod::Lambertian);
@@ -48,8 +49,9 @@ pub fn glass_scene() -> Scene {
             Box::new(left_sphere),
             Box::new(mid_sphere),
             Box::new(right_sphere),
-            Box::new(ground)
+            Box::new(ground),
         ]),
         camera: Camera::default(),
+        name: "glass",
     }
 }

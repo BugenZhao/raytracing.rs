@@ -37,5 +37,5 @@ pub fn render(scene: &Scene) -> Result<()> {
         })
         .collect();
 
-    output_png("out/test.png", &data, width, height)
+    output_png(&format!("out/{}.png", scene.name), &data, width, height)
 }
