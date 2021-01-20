@@ -5,7 +5,7 @@ use crate::{
 };
 
 use super::{coord_utils, Material};
-use crate::coord_ext::CoordRandomExt;
+use crate::vec3::CoordRandomExt;
 
 #[derive(Clone)]
 pub struct Metal {

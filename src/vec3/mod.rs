@@ -6,6 +6,9 @@ use std::{
 use num::Float;
 use rand::prelude::*;
 
+mod coord_ext;
+pub use coord_ext::*;
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3<T> {
     pub x: T,

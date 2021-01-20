@@ -2,7 +2,6 @@
 
 use anyhow::Result;
 
-mod coord_ext;
 mod hit_scatter;
 mod material;
 mod object;

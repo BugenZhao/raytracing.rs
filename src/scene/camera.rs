@@ -1,4 +1,4 @@
-use crate::{coord_ext::CoordRandomExt, ray::Ray, vec3::Coord};
+use crate::{ray::Ray, vec3::Coord, vec3::CoordRandomExt};
 
 pub struct Camera {
     pub aspect_ratio: f64,
