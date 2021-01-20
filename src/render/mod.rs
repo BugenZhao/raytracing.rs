@@ -1,5 +1,5 @@
 use anyhow::Result;
-use indicatif::ParallelProgressIterator;
+use indicatif::{ParallelProgressIterator, ProgressBar, ProgressStyle};
 use itertools::iproduct;
 use rayon::prelude::*;
 use scene::session::RenderSession;
@@ -19,10 +19,18 @@ pub fn render(session: RenderSession) -> Result<()> {
         sample_step,
     } = session;
 
+    println!("Rendering scene `{}`...", scene.name);
+    let bar = ProgressBar::new((width * height) as u64);
+    bar.set_style(
+        ProgressStyle::default_bar()
+            .template("[{elapsed_precise}/{eta_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7}")
+            .progress_chars("##-"),
+    );
+
     let data: Vec<u8> = iproduct!((0..height).rev(), (0..width))
         .collect::<Vec<_>>()
         .par_iter()
-        .progress_count((width * height) as u64)
+        .progress_with(bar)
         .flat_map(|(j, i)| {
             (iproduct!((0..samples_per_pixel_axis), (0..samples_per_pixel_axis)).fold(
                 RelColor::zeros(),

@@ -10,3 +10,13 @@ pub struct Scene<'a> {
     pub camera: Camera,
     pub name: &'a str,
 }
+
+impl<'a> Scene<'a> {
+    pub fn new(world: World, camera: Camera, name: &'a str) -> Self {
+        Self {
+            world,
+            camera,
+            name,
+        }
+    }
+}
