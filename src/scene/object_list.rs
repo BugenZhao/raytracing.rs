@@ -6,11 +6,11 @@ use crate::{
     vec3::RelColor,
 };
 
-pub struct World {
+pub struct ObjectList {
     pub list: Vec<Box<dyn Object>>,
 }
 
-impl World {
+impl ObjectList {
     pub fn new(list: Vec<Box<dyn Object>>) -> Self {
         Self { list }
     }
@@ -45,7 +45,7 @@ impl World {
     }
 }
 
-impl Object for World {
+impl Object for ObjectList {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         self.list
             .iter()

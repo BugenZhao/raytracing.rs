@@ -6,7 +6,7 @@ use crate::{
 
 use rand::{distributions::WeightedIndex, prelude::*};
 
-use super::{camera::Camera, session::RenderSession, world::World, Scene};
+use super::{camera::Camera, session::RenderSession, object_list::ObjectList, Scene};
 
 pub fn simple() -> RenderSession<'static> {
     let diffuse = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
@@ -22,7 +22,7 @@ pub fn simple() -> RenderSession<'static> {
     let ground = Sphere::new(Coord::new(0., -100.5, -1.), 100., diffuse.clone());
 
     RenderSession::new_default(Scene {
-        world: World::new(vec![
+        world: ObjectList::new(vec![
             Box::new(sphere),
             Box::new(back_sphere),
             Box::new(left_sphere),
@@ -46,7 +46,7 @@ pub fn glasses() -> RenderSession<'static> {
     let ground = Sphere::new(Coord::new(0., -100.5, -1.), 100., diffuse.clone());
 
     RenderSession::new_default(Scene {
-        world: World::new(vec![
+        world: ObjectList::new(vec![
             Box::new(left_sphere),
             Box::new(mid_sphere),
             Box::new(right_sphere),
@@ -97,7 +97,7 @@ pub fn lots_of_spheres() -> RenderSession<'static> {
     }
 
     RenderSession::new_default(Scene {
-        world: World::new(list),
+        world: ObjectList::new(list),
         camera: Camera::new(
             Camera::CINEMA,
             100.,
@@ -181,7 +181,7 @@ pub fn weekend_final() -> RenderSession<'static> {
         50,
         10,
         Scene::new(
-            World::new(list),
+            ObjectList::new(list),
             Camera::new(
                 3. / 2.,
                 20.,
