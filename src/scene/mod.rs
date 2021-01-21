@@ -1,18 +1,19 @@
-use self::{camera::Camera, object_list::ObjectList};
+use crate::world::World;
+
+use self::camera::Camera;
 
 mod camera;
 pub mod examples;
 pub mod session;
-mod object_list;
 
-pub struct Scene<'a> {
-    pub world: ObjectList,
+pub struct Scene<'a, W: World> {
+    pub world: W,
     pub camera: Camera,
     pub name: &'a str,
 }
 
-impl<'a> Scene<'a> {
-    pub fn new(world: ObjectList, camera: Camera, name: &'a str) -> Self {
+impl<'a, W: World> Scene<'a, W> {
+    pub fn new(world: W, camera: Camera, name: &'a str) -> Self {
         Self {
             world,
             camera,

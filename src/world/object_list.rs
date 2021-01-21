@@ -6,6 +6,8 @@ use crate::{
     vec3::RelColor,
 };
 
+use super::World;
+
 pub struct ObjectList {
     pub list: Vec<Box<dyn Object>>,
 }
@@ -14,8 +16,10 @@ impl ObjectList {
     pub fn new(list: Vec<Box<dyn Object>>) -> Self {
         Self { list }
     }
+}
 
-    pub fn rel_color_of(&self, ray: &Ray, depth: usize) -> RelColor {
+impl World for ObjectList {
+    fn rel_color_of(&self, ray: &Ray, depth: usize) -> RelColor {
         let black = RelColor::zeros();
 
         if depth == 0 {

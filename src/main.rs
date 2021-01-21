@@ -6,6 +6,7 @@ mod ray;
 mod render;
 mod scene;
 mod vec3;
+mod world;
 
 fn main() {
     render::render(scene::examples::weekend_final()).unwrap();

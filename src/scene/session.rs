@@ -1,22 +1,24 @@
+use crate::world::World;
+
 use super::Scene;
 
-pub struct RenderSession<'a> {
+pub struct RenderSession<'a, W: World> {
     pub width: u32,
     pub max_depth: usize,
     pub samples_per_pixel_axis: u32,
-    pub scene: Scene<'a>,
+    pub scene: Scene<'a, W>,
 
     pub height: u32,
     pub samples_per_pixel: u32,
     pub sample_step: f64,
 }
 
-impl<'a> RenderSession<'a> {
+impl<'a, W: World> RenderSession<'a, W> {
     pub fn new(
         width: u32,
         max_depth: usize,
         mut samples_per_pixel_axis: u32,
-        scene: Scene<'a>,
+        scene: Scene<'a, W>,
     ) -> Self {
         let height = (width as f64 / scene.camera.aspect_ratio) as u32;
 
@@ -37,7 +39,7 @@ impl<'a> RenderSession<'a> {
         }
     }
 
-    pub fn new_default(scene: Scene<'a>) -> Self {
+    pub fn new_default(scene: Scene<'a, W>) -> Self {
         Self::new(800, 50, 16, scene)
     }
 }

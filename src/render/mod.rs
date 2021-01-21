@@ -4,11 +4,11 @@ use itertools::iproduct;
 use rayon::prelude::*;
 use scene::session::RenderSession;
 
-use crate::{scene, vec3::RelColor};
+use crate::{scene, vec3::RelColor, world::World};
 
 mod image;
 
-pub fn render(session: RenderSession) -> Result<()> {
+pub fn render<W: World>(session: RenderSession<W>) -> Result<()> {
     let RenderSession {
         width,
         max_depth,
