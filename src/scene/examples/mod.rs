@@ -1,5 +1,5 @@
-mod general;
+mod weekend;
 mod weekend_final;
 
-pub use general::*;
+pub use weekend::*;
 pub use weekend_final::*;
