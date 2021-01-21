@@ -23,7 +23,7 @@ impl<'a, W: World> RenderSession<'a, W> {
         let height = (width as f64 / scene.camera.aspect_ratio) as u32;
 
         if cfg!(debug_assertions) {
-            samples_per_pixel_axis = 2
+            samples_per_pixel_axis = samples_per_pixel_axis.min(2);
         }
         let samples_per_pixel = samples_per_pixel_axis.pow(2);
         let sample_step = 1. / samples_per_pixel_axis as f64;

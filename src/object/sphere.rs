@@ -4,7 +4,7 @@ use crate::{
     vec3::Coord,
 };
 
-use super::Object;
+use super::{aabb::Aabb, BbObject, Object};
 
 pub struct Sphere<M: Material> {
     pub center: Coord,
@@ -59,5 +59,12 @@ impl<M: Material> Object for Sphere<M> {
                 None
             }
         }
+    }
+}
+
+impl<M: Material> BbObject for Sphere<M> {
+    fn bounding_box(&self) -> Option<Aabb> {
+        let offset = Coord::ones() * self.radius;
+        Some(Aabb::new(self.center - offset, self.center + offset))
     }
 }
