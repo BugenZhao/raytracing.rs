@@ -9,6 +9,7 @@ pub struct RenderSession<'a, W: World> {
     pub max_depth: usize,
     pub samples_per_pixel_axis: u32,
     pub scene: Scene<'a, W>,
+    pub is_day: bool,
 
     pub height: u32,
     pub samples_per_pixel: u32,
@@ -21,6 +22,7 @@ impl<'a, W: World> RenderSession<'a, W> {
         max_depth: usize,
         mut samples_per_pixel_axis: u32,
         scene: Scene<'a, W>,
+        is_day: bool,
     ) -> Self {
         let height = (width as f64 / scene.camera.aspect_ratio) as u32;
 
@@ -35,6 +37,7 @@ impl<'a, W: World> RenderSession<'a, W> {
             max_depth,
             samples_per_pixel_axis,
             scene,
+            is_day,
             height,
             samples_per_pixel,
             sample_step,
@@ -42,6 +45,6 @@ impl<'a, W: World> RenderSession<'a, W> {
     }
 
     pub fn new_default(scene: Scene<'a, W>) -> Self {
-        Self::new(800, 50, 16, scene)
+        Self::new(800, 50, 16, scene, true)
     }
 }

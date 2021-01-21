@@ -92,6 +92,7 @@ macro_rules! weekend_final_func {
                 ),
                 $name,
             ),
+            true,
         );
     };
 }

@@ -5,6 +5,7 @@ use crate::{
 
 use super::Material;
 
+#[derive(Clone)]
 pub struct Light<T: Texture> {
     emission: T,
 }

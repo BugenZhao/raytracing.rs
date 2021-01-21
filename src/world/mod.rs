@@ -13,7 +13,7 @@ pub use bvh::Bvh;
 pub use object_list::ObjectList;
 
 pub trait World: Object {
-    fn rel_color_of(&self, ray: &Ray, depth: usize) -> RelColor {
+    fn rel_color_of(&self, ray: &Ray, is_day: bool, depth: usize) -> RelColor {
         let black = RelColor::zeros();
 
         if depth == 0 {
@@ -33,17 +33,21 @@ pub trait World: Object {
                 }) = hit.material.scatter(ray, &hit)
                 {
                     color += self
-                        .rel_color_of(&scattered_ray, depth - 1)
+                        .rel_color_of(&scattered_ray, is_day, depth - 1)
                         .elemul(attenuation);
                 }
 
                 color
             }
             None => {
-                let t = 0.5 * (ray.dir.y + 1.);
-                let bg_color =
-                    RelColor::new(1., 1., 1.) * (1. - t) + RelColor::new(0.5, 0.7, 1.) * t;
-                bg_color
+                if is_day {
+                    let t = 0.5 * (ray.dir.y + 1.);
+                    let bg_color =
+                        RelColor::new(1., 1., 1.) * (1. - t) + RelColor::new(0.5, 0.7, 1.) * t;
+                    bg_color
+                } else {
+                    black
+                }
             }
         }
     }

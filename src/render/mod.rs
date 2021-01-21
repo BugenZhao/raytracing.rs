@@ -16,6 +16,7 @@ pub fn render<W: World>(session: RenderSession<W>) -> Result<()> {
         max_depth,
         samples_per_pixel_axis,
         scene,
+        is_day,
         height,
         samples_per_pixel,
         sample_step,
@@ -42,7 +43,7 @@ pub fn render<W: World>(session: RenderSession<W>) -> Result<()> {
                     let v = (j as f64 + (b as f64 + 0.5) * sample_step) / (height - 1) as f64;
                     let ray = scene.camera.ray(u, v);
 
-                    acc + scene.world.rel_color_of(&ray, max_depth)
+                    acc + scene.world.rel_color_of(&ray, is_day, max_depth)
                 },
             ) / samples_per_pixel as f64)
                 .into_8bit_color()

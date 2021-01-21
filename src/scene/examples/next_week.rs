@@ -20,33 +20,47 @@ pub fn checker() -> BvhSession {
     let earth_texture = PngTexture::new("res/earthmap.png").unwrap();
     let earth_light = Light::new(earth_texture);
 
+    let white_light = Light::new(Solid::new(1., 1., 1.));
+    let pink_light = Light::new(Solid::new(0.75, 0.37, 0.51));
+
     list.push(Box::new(Sphere::new(
         Coord::new(0., 1., 0.),
         1.,
         Metal::new(RelColor::new(0.99, 0.92, 0.99), 0.),
     )));
     list.push(Box::new(Sphere::new(
-        Coord::new(4., 1., 0.),
+        Coord::new(0., 1., 3.),
         1.,
         earth_light,
     )));
+    list.push(Box::new(Sphere::new(
+        Coord::new(3., 1., 0.),
+        1.,
+        white_light,
+    )));
+    list.push(Box::new(Sphere::new(
+        Coord::new(-3., 1., -3.),
+        1.,
+        pink_light,
+    )));
 
     return RenderSession::new(
-        900,
+        1080,
         50,
-        32,
+        48,
         Scene::new(
             Bvh::new(list),
             Camera::new(
                 Camera::WIDE,
-                20.,
-                Coord::new(13., 2., 3.),
-                Coord::zeros(),
+                40.,
+                Coord::new(6., 6., 6.),
+                Coord::new(-1., 0., -1.),
                 Camera::WORLD_UP,
-                0.1,
-                10.,
+                0.05,
+                0.,
             ),
             "checker",
         ),
+        false,
     );
 }
