@@ -3,10 +3,12 @@ use crate::ray::{EmitRecord, HitRecord, Ray, ScatterRecord};
 mod coord_utils;
 mod dialectric;
 mod diffuse;
+mod light;
 mod metal;
 
 pub use dialectric::*;
 pub use diffuse::*;
+pub use light::*;
 pub use metal::*;
 
 #[allow(unused_variables)]

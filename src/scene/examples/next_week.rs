@@ -1,5 +1,5 @@
 use crate::{
-    material::{Diffuse, DiffuseMethod, Metal},
+    material::{Diffuse, DiffuseMethod, Light, Metal},
     object::{BbObject, Sphere},
     scene::{camera::Camera, session::RenderSession, Scene},
     texture::{Checker, PngTexture, Solid},
@@ -18,7 +18,7 @@ pub fn checker() -> BvhSession {
     list.push(Box::new(ground));
 
     let earth_texture = PngTexture::new("res/earthmap.png").unwrap();
-    let earth_diffuse = Diffuse::new(earth_texture, DiffuseMethod::Lambertian);
+    let earth_light = Light::new(earth_texture);
 
     list.push(Box::new(Sphere::new(
         Coord::new(0., 1., 0.),
@@ -28,7 +28,7 @@ pub fn checker() -> BvhSession {
     list.push(Box::new(Sphere::new(
         Coord::new(4., 1., 0.),
         1.,
-        earth_diffuse,
+        earth_light,
     )));
 
     return RenderSession::new(
