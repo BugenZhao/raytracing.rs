@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use anyhow::Result;
 use indicatif::{ParallelProgressIterator, ProgressBar, ProgressStyle};
 use itertools::iproduct;
@@ -48,5 +50,10 @@ pub fn render<W: World>(session: RenderSession<W>) -> Result<()> {
         })
         .collect();
 
-    image::output_png(&format!("out/{}.png", scene.name), &data, width, height)
+    image::output_png(
+        &PathBuf::from(format!("out/{}.png", scene.name)),
+        &data,
+        width,
+        height,
+    )
 }
