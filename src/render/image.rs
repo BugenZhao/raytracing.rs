@@ -9,7 +9,7 @@ pub fn output_png(path: &Path, data: &[u8], width: u32, height: u32) -> Result<(
     let file = File::create(path)?;
     let writer = BufWriter::new(file);
     let mut encoder = png::Encoder::new(writer, width, height);
-    
+
     encoder.set_color(png::ColorType::RGB);
     encoder.set_depth(png::BitDepth::Eight);
     let mut writer = encoder.write_header()?;

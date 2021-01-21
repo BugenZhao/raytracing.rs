@@ -1,8 +1,8 @@
 use crate::{
-    material::{Dialectric, Diffuse, DiffuseMethod, Metal},
+    material::{Diffuse, DiffuseMethod, Metal},
     object::{BbObject, Sphere},
     scene::{camera::Camera, session::RenderSession, Scene},
-    texture::{Checker, Solid},
+    texture::{Checker, Png as PngTexture, Solid},
     vec3::{Coord, RelColor},
     world::Bvh,
 };
@@ -17,10 +17,18 @@ pub fn checker() -> BvhSession {
     let ground = Sphere::new(Coord::new(0., -1000., 0.), 1000., ground_diffuse);
     list.push(Box::new(ground));
 
+    let earth_texture = PngTexture::new("res/earthmap.png").unwrap();
+    let earth_diffuse = Diffuse::new(earth_texture, DiffuseMethod::Lambertian);
+
+    list.push(Box::new(Sphere::new(
+        Coord::new(0., 1., 0.),
+        1.,
+        Metal::new(RelColor::new(0.99, 0.92, 0.99), 0.),
+    )));
     list.push(Box::new(Sphere::new(
         Coord::new(4., 1., 0.),
         1.,
-        Metal::new(RelColor::new(0.99, 0.92, 0.99), 0.),
+        earth_diffuse,
     )));
 
     return RenderSession::new(
