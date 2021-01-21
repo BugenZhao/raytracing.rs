@@ -23,6 +23,9 @@ impl<'a> HitRecord<'a> {
         texture_uv: (f64, f64),
     ) -> Self {
         debug_assert!((normal.length() - 1.).abs() < 1e-6);
+        debug_assert!(texture_uv.0 >= 0. && texture_uv.0 <= 1.);
+        debug_assert!(texture_uv.1 >= 0. && texture_uv.1 <= 1.);
+
         Self {
             point,
             normal,

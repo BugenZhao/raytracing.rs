@@ -23,9 +23,9 @@ impl<M: Material> Sphere<M> {
         }
     }
 
-    fn texture_uv_at(&self, point: Coord) -> (f64, f64) {
-        let theta = (-point.y).acos();
-        let phi = (-point.z).atan2(point.x) + PI;
+    fn texture_uv_at(&self, outward_normal: Coord) -> (f64, f64) {
+        let theta = (-outward_normal.y).acos();
+        let phi = (-outward_normal.z).atan2(outward_normal.x) + PI;
         let u = phi / (2. * PI);
         let v = theta / PI;
         (u, v)
@@ -63,7 +63,7 @@ impl<M: Material> Object for Sphere<M> {
                 -outward_normal
             };
 
-            let texture_uv = self.texture_uv_at(point);
+            let texture_uv = self.texture_uv_at(outward_normal);
 
             Some(HitRecord::new(
                 point,
