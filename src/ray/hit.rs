@@ -41,3 +41,7 @@ pub struct ScatterRecord {
     pub scattered_ray: Ray,
     pub attenuation: RelColor,
 }
+
+pub struct EmitRecord {
+    pub emitted: RelColor,
+}

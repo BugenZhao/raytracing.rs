@@ -2,7 +2,7 @@ use std::f64::INFINITY;
 
 use crate::{
     object::Object,
-    ray::{Ray, ScatterRecord},
+    ray::{EmitRecord, Ray, ScatterRecord},
     vec3::RelColor,
 };
 
@@ -22,16 +22,22 @@ pub trait World: Object {
 
         match self.hit(ray, 0.001, INFINITY) {
             Some(hit) => {
+                let mut color = black;
+
+                if let Some(EmitRecord { emitted }) = hit.material.emit(ray, &hit) {
+                    color += emitted;
+                }
                 if let Some(ScatterRecord {
                     scattered_ray,
                     attenuation,
                 }) = hit.material.scatter(ray, &hit)
                 {
-                    self.rel_color_of(&scattered_ray, depth - 1)
-                        .elemul(attenuation)
-                } else {
-                    black
+                    color += self
+                        .rel_color_of(&scattered_ray, depth - 1)
+                        .elemul(attenuation);
                 }
+
+                color
             }
             None => {
                 let t = 0.5 * (ray.dir.y + 1.);
