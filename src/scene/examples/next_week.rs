@@ -2,7 +2,7 @@ use crate::{
     material::{Diffuse, DiffuseMethod, Metal},
     object::{BbObject, Sphere},
     scene::{camera::Camera, session::RenderSession, Scene},
-    texture::{Checker, Png as PngTexture, Solid},
+    texture::{Checker, PngTexture, Solid},
     vec3::{Coord, RelColor},
     world::Bvh,
 };
