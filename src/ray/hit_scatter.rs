@@ -10,6 +10,7 @@ pub struct HitRecord<'a> {
     pub t: f64,
     pub front: bool,
     pub material: &'a dyn Material,
+    pub texture_uv: (f64, f64),
 }
 
 impl<'a> HitRecord<'a> {
@@ -19,6 +20,7 @@ impl<'a> HitRecord<'a> {
         t: f64,
         front: bool,
         material: &'a dyn Material,
+        texture_uv: (f64, f64),
     ) -> Self {
         debug_assert!((normal.length() - 1.).abs() < 1e-6);
         Self {
@@ -27,6 +29,7 @@ impl<'a> HitRecord<'a> {
             t,
             front,
             material,
+            texture_uv,
         }
     }
 }

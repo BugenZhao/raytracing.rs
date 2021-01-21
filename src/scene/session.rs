@@ -1,3 +1,5 @@
+use std::env;
+
 use crate::world::World;
 
 use super::Scene;
@@ -22,7 +24,7 @@ impl<'a, W: World> RenderSession<'a, W> {
     ) -> Self {
         let height = (width as f64 / scene.camera.aspect_ratio) as u32;
 
-        if cfg!(debug_assertions) {
+        if cfg!(debug_assertions) || env::var("FAST").is_ok() {
             samples_per_pixel_axis = samples_per_pixel_axis.min(2);
         }
         let samples_per_pixel = samples_per_pixel_axis.pow(2);

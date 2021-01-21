@@ -1,3 +1,5 @@
+use std::f64::consts::PI;
+
 use crate::{
     material::Material,
     ray::{HitRecord, Ray},
@@ -20,6 +22,14 @@ impl<M: Material> Sphere<M> {
             material,
         }
     }
+
+    fn texture_uv_at(&self, point: Coord) -> (f64, f64) {
+        let theta = (-point.y).acos();
+        let phi = (-point.z).atan2(point.x) + PI;
+        let u = phi / (2. * PI);
+        let v = theta / PI;
+        (u, v)
+    }
 }
 
 impl<M: Material> Object for Sphere<M> {
@@ -35,29 +45,34 @@ impl<M: Material> Object for Sphere<M> {
         } else {
             let t1 = (-b - d.sqrt()) / (2. * a);
             let t2 = (-b + d.sqrt()) / (2. * a);
-            let cand_t = if t1 > t_min && t1 < t_max {
+            let t = if t1 > t_min && t1 < t_max {
                 Some(t1)
             } else if t2 > t_min && t2 < t_max {
                 Some(t2)
             } else {
                 None
+            }?;
+
+            let point = ray.at(t);
+            let outward_normal = (point - self.center).unit();
+            let front = (ray.dir.dot(outward_normal)) < 0.;
+
+            let normal = if front {
+                outward_normal
+            } else {
+                -outward_normal
             };
 
-            if let Some(t) = cand_t {
-                let point = ray.at(t);
-                let outward_normal = (point - self.center).unit();
-                let front = (ray.dir.dot(outward_normal)) < 0.;
+            let texture_uv = self.texture_uv_at(point);
 
-                let normal = if front {
-                    outward_normal
-                } else {
-                    -outward_normal
-                };
-
-                Some(HitRecord::new(point, normal, t, front, &self.material))
-            } else {
-                None
-            }
+            Some(HitRecord::new(
+                point,
+                normal,
+                t,
+                front,
+                &self.material,
+                texture_uv,
+            ))
         }
     }
 }

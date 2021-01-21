@@ -2,6 +2,7 @@ use crate::{
     material::{Dialectric, Diffuse, DiffuseMethod, Metal},
     object::{BbObject, Object, Sphere},
     scene::{camera::Camera, session::RenderSession, Scene},
+    texture::Solid,
     vec3::{Coord, RelColor},
     world::{Bvh, ObjectList},
 };
@@ -12,13 +13,13 @@ macro_rules! weekend_final_func {
     ($World:ident, $Object:ident, $name:literal) => {
         let mut list = Vec::<Box<dyn $Object>>::new();
 
-        let ground_diffuse = Diffuse::new(RelColor::new(0.5, 0.5, 0.5), DiffuseMethod::Lambertian);
+        let ground_diffuse = Diffuse::new(Solid::new(0.5, 0.5, 0.5), DiffuseMethod::Lambertian);
         let ground = Sphere::new(Coord::new(0., -1000., 0.), 1000., ground_diffuse);
         list.push(Box::new(ground));
 
         let random_diffuse = || {
             Diffuse::new(
-                RelColor::random(0., 1.).elemul(RelColor::random(0., 1.)),
+                Solid::from(RelColor::random(0., 1.).elemul(RelColor::random(0., 1.))),
                 DiffuseMethod::Lambertian,
             )
         };
@@ -66,7 +67,7 @@ macro_rules! weekend_final_func {
         list.push(Box::new(Sphere::new(
             Coord::new(-4., 1., 0.),
             1.,
-            Diffuse::new(RelColor::new(0.4, 0.2, 0.1), DiffuseMethod::Lambertian),
+            Diffuse::new(Solid::new(0.4, 0.2, 0.1), DiffuseMethod::Lambertian),
         )));
         list.push(Box::new(Sphere::new(
             Coord::new(4., 1., 0.),

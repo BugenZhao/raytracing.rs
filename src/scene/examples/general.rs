@@ -2,6 +2,7 @@ use crate::{
     material::{Dialectric, Diffuse, DiffuseMethod, Metal},
     object::{Object, Sphere},
     scene::{camera::Camera, session::RenderSession, Scene},
+    texture::Solid,
     vec3::{Coord, RelColor},
     world::ObjectList,
 };
@@ -9,9 +10,9 @@ use crate::{
 use rand::{distributions::WeightedIndex, prelude::*};
 
 pub fn simple() -> RenderSession<'static, ObjectList> {
-    let diffuse = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
-    let diffuse_green = Diffuse::new(RelColor::new(0.3, 0.9, 0.3), DiffuseMethod::Lambertian);
-    let diffuse_red = Diffuse::new(RelColor::new(0.95, 0.2, 0.2), DiffuseMethod::Lambertian);
+    let diffuse = Diffuse::new(Solid::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
+    let diffuse_green = Diffuse::new(Solid::new(0.3, 0.9, 0.3), DiffuseMethod::Lambertian);
+    let diffuse_red = Diffuse::new(Solid::new(0.95, 0.2, 0.2), DiffuseMethod::Lambertian);
     let metal = Metal::new(RelColor::new(0.8, 0.8, 0.8), 0.05);
     let metal_gold = Metal::new(RelColor::new(0.93, 0.68, 0.25), 0.2);
 
@@ -35,10 +36,10 @@ pub fn simple() -> RenderSession<'static, ObjectList> {
 }
 
 pub fn glasses() -> RenderSession<'static, ObjectList> {
-    let diffuse = Diffuse::new(RelColor::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
+    let diffuse = Diffuse::new(Solid::new(0.6, 0.6, 0.6), DiffuseMethod::Lambertian);
     let glass = Dialectric::new(1.5);
-    let diffuse_red = Diffuse::new(RelColor::new(0.95, 0.2, 0.2), DiffuseMethod::Lambertian);
-    let diffuse_green = Diffuse::new(RelColor::new(0.3, 0.9, 0.3), DiffuseMethod::Lambertian);
+    let diffuse_red = Diffuse::new(Solid::new(0.95, 0.2, 0.2), DiffuseMethod::Lambertian);
+    let diffuse_green = Diffuse::new(Solid::new(0.3, 0.9, 0.3), DiffuseMethod::Lambertian);
 
     let left_sphere = Sphere::new(Coord::new(-0.6, 0., -1.), 0.3, diffuse_red.clone());
     let mid_sphere = Sphere::new(Coord::new(0., 0., -1.), 0.3, glass.clone());
@@ -58,8 +59,13 @@ pub fn glasses() -> RenderSession<'static, ObjectList> {
 }
 
 pub fn lots_of_spheres() -> RenderSession<'static, ObjectList> {
-    let diffuse = Diffuse::new(RelColor::new(0.8, 0.8, 0.8), DiffuseMethod::Lambertian);
-    let random_diffuse = || Diffuse::new(RelColor::random(0., 0.7), DiffuseMethod::Lambertian);
+    let diffuse = Diffuse::new(Solid::new(0.8, 0.8, 0.8), DiffuseMethod::Lambertian);
+    let random_diffuse = || {
+        Diffuse::new(
+            Solid::from(RelColor::random(0., 0.7)),
+            DiffuseMethod::Lambertian,
+        )
+    };
     let random_metal = || {
         Metal::new(
             RelColor::random(0., 0.7),

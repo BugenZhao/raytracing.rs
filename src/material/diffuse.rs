@@ -1,6 +1,7 @@
 use crate::{
     ray::{HitRecord, Ray, ScatterRecord},
-    vec3::{Coord, RelColor},
+    texture::Texture,
+    vec3::Coord,
 };
 
 use super::Material;
@@ -13,18 +14,18 @@ pub enum DiffuseMethod {
 }
 
 #[derive(Clone)]
-pub struct Diffuse {
-    albedo: RelColor,
+pub struct Diffuse<T: Texture> {
+    albedo: T,
     method: DiffuseMethod,
 }
 
-impl Diffuse {
-    pub fn new(albedo: RelColor, method: DiffuseMethod) -> Self {
+impl<T: Texture> Diffuse<T> {
+    pub fn new(albedo: T, method: DiffuseMethod) -> Self {
         Self { albedo, method }
     }
 }
 
-impl Material for Diffuse {
+impl<T: Texture> Material for Diffuse<T> {
     fn scatter(&self, _: &Ray, hit: &HitRecord) -> Option<ScatterRecord> {
         let scattered_dir = match self.method {
             DiffuseMethod::Basic => hit.normal + Coord::random_in_unit_sphere(),
@@ -35,7 +36,7 @@ impl Material for Diffuse {
 
         Some(ScatterRecord {
             scattered_ray,
-            attenuation: self.albedo,
+            attenuation: self.albedo.at(hit.texture_uv, hit.point),
         })
     }
 }
