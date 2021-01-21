@@ -9,5 +9,5 @@ mod vec3;
 mod world;
 
 fn main() {
-    render::render(scene::examples::weekend_final()).unwrap();
+    render::render(scene::examples::weekend_final_bvh()).unwrap();
 }
