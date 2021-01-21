@@ -2,7 +2,7 @@ use crate::{
     material::{Dialectric, Diffuse, DiffuseMethod, Metal},
     object::{Object, Sphere},
     vec3::{Coord, RelColor},
-    world::ObjectList,
+    world::{Bvh, ObjectList},
 };
 
 use rand::{distributions::WeightedIndex, prelude::*};

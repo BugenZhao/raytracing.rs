@@ -63,8 +63,8 @@ impl<M: Material> Object for Sphere<M> {
 }
 
 impl<M: Material> BbObject for Sphere<M> {
-    fn bounding_box(&self) -> Option<Aabb> {
+    fn bounding_box(&self) -> Aabb {
         let offset = Coord::ones() * self.radius;
-        Some(Aabb::new(self.center - offset, self.center + offset))
+        Aabb::new(self.center - offset, self.center + offset)
     }
 }
