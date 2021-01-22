@@ -1,8 +1,10 @@
 mod aabb;
+mod cuboid;
 mod rect;
 mod sphere;
 
 pub use aabb::Aabb;
+pub use cuboid::Cuboid;
 pub use rect::{RectXY, RectXZ, RectYZ};
 pub use sphere::Sphere;
 

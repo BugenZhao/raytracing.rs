@@ -57,6 +57,12 @@ impl Object for Bvh {
     }
 }
 
+impl BbObject for Bvh {
+    fn bounding_box(&self) -> Aabb {
+        self.root.bounding_box()
+    }
+}
+
 impl World for Bvh {}
 
 struct BvhNode {

@@ -1,6 +1,6 @@
 use crate::{
     material::{Diffuse, DiffuseMethod, Light, Metal},
-    object::{BbObject, RectXY, RectXZ, RectYZ, Sphere},
+    object::{BbObject, Cuboid, RectXY, RectXZ, RectYZ, Sphere},
     scene::{camera::Camera, session::RenderSession, Scene},
     texture::{Checker, PngTexture, Solid},
     vec3::{Coord, RelColor},
@@ -147,6 +147,19 @@ pub fn cornell_box() -> BvhSession {
         (343., 332.),
         554.,
         light,
+    )));
+
+    let side_material_gen =
+        |_n| Diffuse::new(Solid::new(0.73, 0.73, 0.73), DiffuseMethod::Lambertian);
+    list.push(Box::new(Cuboid::new(
+        Coord::new(130., 0., 65.),
+        Coord::new(295., 165., 230.),
+        side_material_gen.clone(),
+    )));
+    list.push(Box::new(Cuboid::new(
+        Coord::new(265., 0., 295.),
+        Coord::new(430., 430., 430.),
+        side_material_gen.clone(),
     )));
 
     return BvhSession::new(

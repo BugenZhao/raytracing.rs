@@ -6,6 +6,8 @@ use crate::{
 
 use super::{Aabb, BbObject, Object};
 
+pub trait Rect: BbObject {}
+
 macro_rules! define_rect {
     ($Name:ident, $x:ident, $y:ident, $z:ident) => {
         pub struct $Name<M: Material> {
@@ -75,6 +77,8 @@ macro_rules! define_rect {
                 Aabb::new(min, max)
             }
         }
+
+        impl<M: Material> Rect for $Name<M> {}
     };
 }
 
