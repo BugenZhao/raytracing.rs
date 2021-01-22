@@ -10,7 +10,7 @@ mod vec3;
 mod world;
 
 fn main() -> anyhow::Result<()> {
-    let session = scene::examples::cornell_smoke_sphere();
+    let session = scene::examples::simple();
     // render::render_image(session)?;
     render::run_interactive(session)?;
     

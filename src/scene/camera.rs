@@ -1,13 +1,21 @@
 use crate::{ray::Ray, vec3::Coord, vec3::CoordRandomExt};
 
+#[derive(Debug)]
 pub struct Camera {
     pub aspect_ratio: f64,
+    pub vertical_fov: f64,
+    pub origin: Coord,
+    pub look_at: Coord,
+    pub vup: Coord,
+    pub aperture: f64,
+    pub focus_dist: f64,
 
-    origin: Coord,
     corner: Coord,
     horizontal: Coord,
     vertical: Coord,
     lens_radius: f64,
+
+    w: Coord,
 }
 
 impl Camera {
@@ -22,13 +30,14 @@ impl Camera {
 
     pub fn new(
         aspect_ratio: f64,
-        vertical_fov: f64,
+        mut vertical_fov: f64,
         origin: Coord,
         look_at: Coord,
         vup: Coord,
         aperture: f64,
         mut focus_dist: f64,
     ) -> Self {
+        vertical_fov = vertical_fov.max(5.).min(175.);
         let theta = vertical_fov.to_radians();
         let h = (theta / 2.).tan();
         let vp_height = h * 2.;
@@ -49,11 +58,17 @@ impl Camera {
 
         Self {
             aspect_ratio,
+            vertical_fov,
             origin,
+            look_at,
+            vup,
+            aperture,
+            focus_dist,
             corner,
             horizontal,
             vertical,
             lens_radius,
+            w,
         }
     }
 
@@ -63,6 +78,30 @@ impl Camera {
             (self.corner + self.horizontal * u + self.vertical * v - offset_origin).unit();
 
         Ray::new(offset_origin, dir)
+    }
+
+    pub fn move_step(&mut self, origin_step: Coord, look_at_step: Coord) {
+        *self = Self::new(
+            self.aspect_ratio,
+            self.vertical_fov,
+            self.origin + origin_step,
+            self.look_at + look_at_step,
+            self.vup,
+            self.aperture,
+            self.focus_dist,
+        )
+    }
+
+    pub fn set_vfov(&mut self, new_vfov: f64) {
+        *self = Self::new(
+            self.aspect_ratio,
+            new_vfov,
+            self.origin,
+            self.look_at,
+            self.vup,
+            self.aperture,
+            self.focus_dist,
+        )
     }
 }
 
