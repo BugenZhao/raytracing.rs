@@ -132,7 +132,7 @@ pub fn cornell_smoke() -> BvhSession {
     );
 }
 
-pub fn cornell_sphere() -> BvhSession {
+pub fn cornell_smoke_sphere() -> BvhSession {
     let mut list = get_cornell_room();
 
     let sphere = Sphere::new(Coord::new(277.5, 150., 277.5), 150., Dialectric::new(1.5));
@@ -143,8 +143,12 @@ pub fn cornell_sphere() -> BvhSession {
     return BvhSession::new(
         1024,
         50,
-        64,
-        Scene::new(Bvh::new(list), Camera::new_cornell(), "cornell_sphere"),
+        32,
+        Scene::new(
+            Bvh::new(list),
+            Camera::new_cornell(),
+            "cornell_smoke_sphere",
+        ),
         false,
     );
 }

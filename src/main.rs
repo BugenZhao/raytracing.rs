@@ -10,5 +10,5 @@ mod vec3;
 mod world;
 
 fn main() {
-    render::render(scene::examples::cornell_smoke()).unwrap();
+    render::render(scene::examples::cornell_smoke_sphere()).unwrap();
 }
