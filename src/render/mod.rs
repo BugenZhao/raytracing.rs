@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use anyhow::Result;
 use indicatif::{ParallelProgressIterator, ProgressBar, ProgressStyle};
 use itertools::iproduct;
@@ -10,17 +8,20 @@ use crate::{scene, vec3::RelColor, world::World};
 
 mod image;
 
-pub fn render<W: World>(session: RenderSession<W>) -> Result<()> {
+pub use image::render_image;
+
+fn render<W: World>(session: &RenderSession<W>) -> Result<Vec<u8>> {
     let RenderSession {
         width,
         max_depth,
         samples_per_pixel_axis,
-        scene,
         is_day,
         height,
         samples_per_pixel,
         sample_step,
-    } = session;
+        ..
+    } = *session;
+    let scene = &session.scene;
 
     println!("Rendering scene `{}`...", scene.name);
     let bar = ProgressBar::new((width * height) as u64);
@@ -51,10 +52,5 @@ pub fn render<W: World>(session: RenderSession<W>) -> Result<()> {
         })
         .collect();
 
-    image::output_png(
-        &PathBuf::from(format!("out/{}.png", scene.name)),
-        &data,
-        width,
-        height,
-    )
+    Ok(data)
 }

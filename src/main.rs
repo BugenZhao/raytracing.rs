@@ -9,6 +9,7 @@ mod texture;
 mod vec3;
 mod world;
 
-fn main() {
-    render::render(scene::examples::cornell_smoke_sphere()).unwrap();
+fn main() -> anyhow::Result<()> {
+    render::render_image(scene::examples::cornell_smoke_sphere())?;
+    Ok(())
 }

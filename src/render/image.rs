@@ -1,8 +1,30 @@
-use std::{fs::File, io::BufWriter, path::Path};
+use std::{
+    fs::File,
+    io::BufWriter,
+    path::{Path, PathBuf},
+};
 
 use anyhow::Result;
 
-pub fn output_png(path: &Path, data: &[u8], width: u32, height: u32) -> Result<()> {
+use crate::{scene::session::RenderSession, world::World};
+
+use super::render;
+
+pub fn render_image<W: World>(session: RenderSession<W>) -> Result<()> {
+    let name = session.scene.name;
+    let (width, height) = (session.width, session.height);
+
+    let data = render(&session)?;
+
+    output_png(
+        &PathBuf::from(format!("out/{}.png", name)),
+        &data,
+        width,
+        height,
+    )
+}
+
+fn output_png(path: &Path, data: &[u8], width: u32, height: u32) -> Result<()> {
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent)?;
     }
