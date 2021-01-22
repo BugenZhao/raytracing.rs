@@ -18,7 +18,7 @@ macro_rules! define_rect {
         }
 
         impl<M: Material> $Name<M> {
-            pub fn new(a0: f64, b0: f64, a1: f64, b1: f64, c: f64, material: M) -> Self {
+            pub fn new((a0, b0): (f64, f64), (a1, b1): (f64, f64), c: f64, material: M) -> Self {
                 Self {
                     a0,
                     b0,

@@ -79,17 +79,17 @@ pub fn rect_light() -> BvhSession {
 
     {
         let bright_light = Light::new(Solid::new(4., 4., 4.));
-        let rect = RectXY::new(3., 1., 7., 5., -2., bright_light);
+        let rect = RectXY::new((3., 1.), (7., 5.), -2., bright_light);
         list.push(Box::new(rect));
     }
     {
         let bright_light = Light::new(Solid::new(4., 4., 4.));
-        let rect = RectXZ::new(-2., -2., 2., 2., 6., bright_light);
+        let rect = RectXZ::new((-2., -2.), (2., 2.), 6., bright_light);
         list.push(Box::new(rect));
     }
     {
         let bright_light = Light::new(Solid::new(4., 4., 4.));
-        let rect = RectYZ::new(1., 3., 4., 6., -6., bright_light);
+        let rect = RectYZ::new((1., 3.), (4., 6.), -6., bright_light);
         list.push(Box::new(rect));
     }
 
@@ -109,6 +109,62 @@ pub fn rect_light() -> BvhSession {
                 0.,
             ),
             "rect_light",
+        ),
+        false,
+    );
+}
+
+pub fn cornell_box() -> BvhSession {
+    let red = Diffuse::new(Solid::new(0.65, 0.05, 0.05), DiffuseMethod::Lambertian);
+    let white = Diffuse::new(Solid::new(0.73, 0.73, 0.73), DiffuseMethod::Lambertian);
+    let green = Diffuse::new(Solid::new(0.12, 0.45, 0.15), DiffuseMethod::Lambertian);
+    let light = Light::new(Solid::new(15., 15., 15.));
+
+    let mut list = Vec::<Box<dyn BbObject>>::new();
+    list.push(Box::new(RectYZ::new((0., 0.), (555., 555.), 555., green)));
+    list.push(Box::new(RectYZ::new((0., 0.), (555., 555.), 0., red)));
+    list.push(Box::new(RectXZ::new(
+        (0., 0.),
+        (555., 555.),
+        0.,
+        white.clone(),
+    )));
+    list.push(Box::new(RectXZ::new(
+        (0., 0.),
+        (555., 555.),
+        555.,
+        white.clone(),
+    )));
+    list.push(Box::new(RectXY::new(
+        (0., 0.),
+        (555., 555.),
+        555.,
+        white.clone(),
+    )));
+
+    list.push(Box::new(RectXZ::new(
+        (213., 227.),
+        (343., 332.),
+        554.,
+        light,
+    )));
+
+    return BvhSession::new(
+        1024,
+        50,
+        32,
+        Scene::new(
+            Bvh::new(list),
+            Camera::new(
+                1.,
+                40.,
+                Coord::new(278., 278., -800.),
+                Coord::new(278., 278., 0.),
+                Camera::WORLD_UP,
+                0.,
+                0.,
+            ),
+            "cornell_box",
         ),
         false,
     );
