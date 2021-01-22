@@ -105,6 +105,6 @@ macro_rules! define_rotate {
     };
 }
 
-define_rotate!(RotateXY, x, y, z);
-define_rotate!(RotateZX, z, x, y);
-define_rotate!(RotateYZ, y, z, x);
+define_rotate!(RotateX, y, z, x);
+define_rotate!(RotateY, z, x, y);
+define_rotate!(RotateZ, x, y, z);

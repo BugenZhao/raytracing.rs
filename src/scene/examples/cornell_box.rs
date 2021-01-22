@@ -1,6 +1,6 @@
 use crate::{
     material::{Diffuse, DiffuseMethod, Light},
-    object::{BbObject, Cuboid, RectXY, RectXZ, RectYZ, RotateZX, Translate},
+    object::{BbObject, Cuboid, RectXY, RectXZ, RectYZ, RotateY, Translate},
     scene::{camera::Camera, session::RenderSession, Scene},
     texture::{Solid},
     vec3::{Coord},
@@ -52,7 +52,7 @@ pub fn cornell_box(quality: u32) -> BvhSession {
         Coord::new(165., 330., 165.),
         side_material_gen.clone(),
     );
-    let box1 = RotateZX::new(box1, 15.);
+    let box1 = RotateY::new(box1, 15.);
     let box1 = Translate::new(box1, Coord::new(265., 0., 295.));
     list.push(Box::new(box1));
 
@@ -61,7 +61,7 @@ pub fn cornell_box(quality: u32) -> BvhSession {
         Coord::new(165., 165., 165.),
         side_material_gen.clone(),
     );
-    let box2 = RotateZX::new(box2, -18.);
+    let box2 = RotateY::new(box2, -18.);
     let box2 = Translate::new(box2, Coord::new(130., 0., 65.));
     list.push(Box::new(box2));
 

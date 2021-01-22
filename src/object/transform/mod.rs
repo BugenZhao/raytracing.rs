@@ -1,5 +1,5 @@
 mod rotate;
 mod translate;
 
-pub use rotate::{RotateXY, RotateYZ, RotateZX};
+pub use rotate::{RotateX, RotateY, RotateZ};
 pub use translate::Translate;
