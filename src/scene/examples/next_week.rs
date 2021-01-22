@@ -139,14 +139,14 @@ pub fn cornell_smoke_sphere() -> BvhSession {
     let mut list = get_cornell_room();
 
     let sphere = Sphere::new(Coord::new(277.5, 150., 277.5), 150., Dialectric::new(1.5));
-    let smoke_sphere = ConstantMedium::new(sphere.clone(), Solid::new(0.3, 0.3, 1.), 1e-2);
+    let smoke_sphere = ConstantMedium::new(sphere.clone(), Solid::new(0.3, 0.3, 1.), 0.2);
     list.push(Box::new(smoke_sphere));
     list.push(Box::new(sphere));
 
     return BvhSession::new(
         1024,
         50,
-        32,
+        64,
         Scene::new(
             Bvh::new(list),
             Camera::new_cornell(),
