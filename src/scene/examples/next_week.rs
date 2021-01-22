@@ -20,7 +20,7 @@ pub fn checker() -> BvhSession {
     let earth_texture = PngTexture::new("res/earthmap.png").unwrap();
     let earth_light = Light::new(earth_texture);
 
-    let white_light = Light::new(Solid::new(1., 1., 1.));
+    let white_light = Light::new(Solid::new(2., 2., 2.));
     let pink_light = Light::new(Solid::new(0.75, 0.37, 0.51));
 
     list.push(Box::new(Sphere::new(
