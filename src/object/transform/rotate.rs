@@ -42,6 +42,10 @@ macro_rules! define_rotate {
                     min.$y = min.$y.min(new_b);
                     max.$x = max.$x.max(new_a);
                     max.$y = max.$y.max(new_b);
+
+                    // DO NOT SKIP THIS
+                    min.$z = min.$z.min(p.$z);
+                    max.$z = max.$z.max(p.$z);
                 }
                 let bb = Aabb::new(min, max);
 
@@ -84,7 +88,7 @@ macro_rules! define_rotate {
 
                 Some(HitRecord::new(
                     new_point,
-                    new_outward_normal, // FIXME: buggy on light
+                    new_outward_normal, // TODO: is this ok?
                     hit.t,
                     HitRecord::is_front(&new_ray, new_outward_normal),
                     hit.material,
