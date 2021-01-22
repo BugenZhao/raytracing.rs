@@ -8,7 +8,7 @@ pub use aabb::Aabb;
 pub use cuboid::Cuboid;
 pub use rect::{RectXY, RectXZ, RectYZ};
 pub use sphere::Sphere;
-pub use transform::Translate;
+pub use transform::*;
 
 use crate::ray::{HitRecord, Ray};
 
