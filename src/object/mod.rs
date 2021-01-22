@@ -3,8 +3,8 @@ mod rect;
 mod sphere;
 
 pub use aabb::Aabb;
+pub use rect::{RectXY, RectXZ, RectYZ};
 pub use sphere::Sphere;
-pub use rect::*;
 
 use crate::ray::{HitRecord, Ray};
 

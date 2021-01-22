@@ -1,6 +1,6 @@
 use crate::{
     material::{Diffuse, DiffuseMethod, Light, Metal},
-    object::{BbObject, Rect, Sphere},
+    object::{BbObject, RectXY, RectXZ, RectYZ, Sphere},
     scene::{camera::Camera, session::RenderSession, Scene},
     texture::{Checker, PngTexture, Solid},
     vec3::{Coord, RelColor},
@@ -77,9 +77,21 @@ pub fn rect_light() -> BvhSession {
     let sphere = Sphere::new(Coord::new(0., 2., 0.), 2., metal);
     list.push(Box::new(sphere));
 
-    let pink_light = Light::new(Solid::new(4., 4., 4.));
-    let rect = Rect::new(3., 1., 7., 5., -2., pink_light);
-    list.push(Box::new(rect));
+    {
+        let bright_light = Light::new(Solid::new(4., 4., 4.));
+        let rect = RectXY::new(3., 1., 7., 5., -2., bright_light);
+        list.push(Box::new(rect));
+    }
+    {
+        let bright_light = Light::new(Solid::new(4., 4., 4.));
+        let rect = RectXZ::new(-2., -2., 2., 2., 6., bright_light);
+        list.push(Box::new(rect));
+    }
+    {
+        let bright_light = Light::new(Solid::new(4., 4., 4.));
+        let rect = RectYZ::new(1., 3., 4., 6., -6., bright_light);
+        list.push(Box::new(rect));
+    }
 
     return RenderSession::new(
         1080,
