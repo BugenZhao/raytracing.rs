@@ -92,4 +92,16 @@ impl Camera {
             0.,
         )
     }
+
+    pub fn new_cornell() -> Self {
+        Self::new(
+            1.,
+            40.,
+            Coord::new(278., 278., -800.),
+            Coord::new(278., 278., 0.),
+            Camera::WORLD_UP,
+            0.,
+            0.,
+        )
+    }
 }

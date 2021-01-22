@@ -1,11 +1,13 @@
 use crate::{
-    material::{Diffuse, DiffuseMethod, Light, Metal, Transparent},
+    material::{Dialectric, Diffuse, DiffuseMethod, Light, Metal},
     object::{BbObject, ConstantMedium, RectXY, RectXZ, RectYZ, Sphere},
     scene::{camera::Camera, session::RenderSession, Scene},
     texture::{Checker, PngTexture, Solid},
     vec3::{Coord, RelColor},
     world::Bvh,
 };
+
+use super::get_cornell_room;
 
 type BvhSession = RenderSession<'static, Bvh>;
 
@@ -115,61 +117,34 @@ pub fn rect_light() -> BvhSession {
 }
 
 pub fn cornell_smoke() -> BvhSession {
-    let red = Diffuse::new(Solid::new(0.65, 0.05, 0.05), DiffuseMethod::Lambertian);
-    let white = Diffuse::new(Solid::new(0.73, 0.73, 0.73), DiffuseMethod::Lambertian);
-    let green = Diffuse::new(Solid::new(0.12, 0.45, 0.15), DiffuseMethod::Lambertian);
-    let light = Light::new(Solid::new(15., 15., 15.));
+    let mut list = get_cornell_room();
 
-    let mut list = Vec::<Box<dyn BbObject>>::new();
-    list.push(Box::new(RectYZ::new((0., 0.), (555., 555.), 555., green)));
-    list.push(Box::new(RectYZ::new((0., 0.), (555., 555.), 0., red)));
-    list.push(Box::new(RectXZ::new(
-        (0., 0.),
-        (555., 555.),
-        0.,
-        white.clone(),
-    )));
-    list.push(Box::new(RectXZ::new(
-        (0., 0.),
-        (555., 555.),
-        555.,
-        white.clone(),
-    )));
-    list.push(Box::new(RectXY::new(
-        (0., 0.),
-        (555., 555.),
-        555.,
-        white.clone(),
-    )));
-
-    list.push(Box::new(RectXZ::new(
-        (213., 227.),
-        (343., 332.),
-        554.,
-        light,
-    )));
-
-    let sphere = Sphere::new(Coord::new(277.5, 150., 277.5), 150., Transparent::new());
-    let smoke_sphere = ConstantMedium::new(sphere, Solid::new(0.3, 0.3, 1.), 1e-2);
+    let sphere = Sphere::new(Coord::new(277.5, 150., 277.5), 150., Dialectric::new(1.5));
+    let smoke_sphere = ConstantMedium::new(sphere.clone(), Solid::new(0.3, 0.3, 1.), 1e-2);
     list.push(Box::new(smoke_sphere));
 
     return BvhSession::new(
         1024,
         50,
-        32,
-        Scene::new(
-            Bvh::new(list),
-            Camera::new(
-                1.,
-                40.,
-                Coord::new(278., 278., -800.),
-                Coord::new(278., 278., 0.),
-                Camera::WORLD_UP,
-                0.,
-                0.,
-            ),
-            "cornell_smoke",
-        ),
+        64,
+        Scene::new(Bvh::new(list), Camera::new_cornell(), "cornell_smoke"),
+        false,
+    );
+}
+
+pub fn cornell_sphere() -> BvhSession {
+    let mut list = get_cornell_room();
+
+    let sphere = Sphere::new(Coord::new(277.5, 150., 277.5), 150., Dialectric::new(1.5));
+    let smoke_sphere = ConstantMedium::new(sphere.clone(), Solid::new(0.3, 0.3, 1.), 1e-2);
+    list.push(Box::new(smoke_sphere));
+    list.push(Box::new(sphere));
+
+    return BvhSession::new(
+        1024,
+        50,
+        64,
+        Scene::new(Bvh::new(list), Camera::new_cornell(), "cornell_sphere"),
         false,
     );
 }

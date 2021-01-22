@@ -2,14 +2,14 @@ use crate::{
     material::{Diffuse, DiffuseMethod, Light},
     object::{BbObject, Cuboid, RectXY, RectXZ, RectYZ, RotateY, Translate},
     scene::{camera::Camera, session::RenderSession, Scene},
-    texture::{Solid},
-    vec3::{Coord},
+    texture::Solid,
+    vec3::Coord,
     world::Bvh,
 };
 
 type BvhSession = RenderSession<'static, Bvh>;
 
-pub fn cornell_box(quality: u32) -> BvhSession {
+pub fn get_cornell_room() -> Vec<Box<dyn BbObject>> {
     let red = Diffuse::new(Solid::new(0.65, 0.05, 0.05), DiffuseMethod::Lambertian);
     let white = Diffuse::new(Solid::new(0.73, 0.73, 0.73), DiffuseMethod::Lambertian);
     let green = Diffuse::new(Solid::new(0.12, 0.45, 0.15), DiffuseMethod::Lambertian);
@@ -44,6 +44,12 @@ pub fn cornell_box(quality: u32) -> BvhSession {
         light,
     )));
 
+    list
+}
+
+pub fn cornell_box(quality: u32) -> BvhSession {
+    let mut list = get_cornell_room();
+
     let side_material_gen =
         |_n| Diffuse::new(Solid::new(0.73, 0.73, 0.73), DiffuseMethod::Lambertian);
 
@@ -69,19 +75,7 @@ pub fn cornell_box(quality: u32) -> BvhSession {
         1024,
         50,
         quality,
-        Scene::new(
-            Bvh::new(list),
-            Camera::new(
-                1.,
-                40.,
-                Coord::new(278., 278., -800.),
-                Coord::new(278., 278., 0.),
-                Camera::WORLD_UP,
-                0.,
-                0.,
-            ),
-            "cornell_box",
-        ),
+        Scene::new(Bvh::new(list), Camera::new_cornell(), "cornell_box"),
         false,
     );
 }

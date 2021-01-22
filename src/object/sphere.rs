@@ -8,6 +8,7 @@ use crate::{
 
 use super::{aabb::Aabb, BbObject, Object};
 
+#[derive(Clone)]
 pub struct Sphere<M: Material> {
     pub center: Coord,
     pub radius: f64,
