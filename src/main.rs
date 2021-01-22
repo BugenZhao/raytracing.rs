@@ -10,5 +10,5 @@ mod world;
 mod texture;
 
 fn main() {
-    render::render(scene::examples::cornell_box()).unwrap();
+    render::render(scene::examples::cornell_box(64)).unwrap();
 }
