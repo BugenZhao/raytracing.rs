@@ -55,19 +55,13 @@ impl<M: Material> Object for Sphere<M> {
 
             let point = ray.at(t);
             let outward_normal = (point - self.center).unit();
-            let front = (ray.dir.dot(outward_normal)) < 0.;
-
-            let normal = if front {
-                outward_normal
-            } else {
-                -outward_normal
-            };
+            let front = HitRecord::is_front(ray, outward_normal);
 
             let texture_uv = self.texture_uv_at(outward_normal);
 
             Some(HitRecord::new(
                 point,
-                normal,
+                outward_normal,
                 t,
                 front,
                 &self.material,
