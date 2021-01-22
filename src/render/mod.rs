@@ -7,8 +7,10 @@ use scene::session::RenderSession;
 use crate::{scene, vec3::RelColor, world::World};
 
 mod image;
+mod window;
 
 pub use image::render_image;
+pub use window::run as run_interactive;
 
 fn render<W: World>(session: &RenderSession<W>) -> Result<Vec<u8>> {
     let RenderSession {
