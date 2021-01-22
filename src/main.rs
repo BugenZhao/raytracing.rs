@@ -5,10 +5,10 @@ mod object;
 mod ray;
 mod render;
 mod scene;
+mod texture;
 mod vec3;
 mod world;
-mod texture;
 
 fn main() {
-    render::render(scene::examples::cornell_box(64)).unwrap();
+    render::render(scene::examples::cornell_smoke()).unwrap();
 }

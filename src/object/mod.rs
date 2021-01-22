@@ -1,10 +1,12 @@
 mod aabb;
+mod constant_medium;
 mod cuboid;
 mod rect;
 mod sphere;
 mod transform;
 
 pub use aabb::Aabb;
+pub use constant_medium::ConstantMedium;
 pub use cuboid::Cuboid;
 pub use rect::{RectXY, RectXZ, RectYZ};
 pub use sphere::Sphere;
