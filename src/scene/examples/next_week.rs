@@ -1,6 +1,6 @@
 use crate::{
     material::{Diffuse, DiffuseMethod, Light, Metal},
-    object::{BbObject, Cuboid, RectXY, RectXZ, RectYZ, Sphere},
+    object::{BbObject, Cuboid, RectXY, RectXZ, RectYZ, RotateZX, Sphere, Translate},
     scene::{camera::Camera, session::RenderSession, Scene},
     texture::{Checker, PngTexture, Solid},
     vec3::{Coord, RelColor},
@@ -151,16 +151,24 @@ pub fn cornell_box() -> BvhSession {
 
     let side_material_gen =
         |_n| Diffuse::new(Solid::new(0.73, 0.73, 0.73), DiffuseMethod::Lambertian);
-    list.push(Box::new(Cuboid::new(
-        Coord::new(130., 0., 65.),
-        Coord::new(295., 165., 230.),
+
+    let box1 = Cuboid::new(
+        Coord::new(0., 0., 0.),
+        Coord::new(165., 330., 165.),
         side_material_gen.clone(),
-    )));
-    list.push(Box::new(Cuboid::new(
-        Coord::new(265., 0., 295.),
-        Coord::new(430., 430., 430.),
+    );
+    let box1 = RotateZX::new(box1, 15.);
+    let box1 = Translate::new(box1, Coord::new(265., 0., 295.));
+    list.push(Box::new(box1));
+
+    let box2 = Cuboid::new(
+        Coord::new(0., 0., 0.),
+        Coord::new(165., 165., 165.),
         side_material_gen.clone(),
-    )));
+    );
+    let box2 = RotateZX::new(box2, -18.);
+    let box2 = Translate::new(box2, Coord::new(130., 0., 65.));
+    list.push(Box::new(box2));
 
     return BvhSession::new(
         1024,
