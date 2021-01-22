@@ -2,11 +2,13 @@ mod aabb;
 mod cuboid;
 mod rect;
 mod sphere;
+mod transform;
 
 pub use aabb::Aabb;
 pub use cuboid::Cuboid;
 pub use rect::{RectXY, RectXZ, RectYZ};
 pub use sphere::Sphere;
+pub use transform::Translate;
 
 use crate::ray::{HitRecord, Ray};
 
