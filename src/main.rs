@@ -10,5 +10,5 @@ mod world;
 mod texture;
 
 fn main() {
-    render::render(scene::examples::checker()).unwrap();
+    render::render(scene::examples::rect_light()).unwrap();
 }
